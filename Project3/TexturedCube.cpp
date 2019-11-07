@@ -24,16 +24,6 @@
 // Each attribute matches to a location in the vertex shader (for either postion, colour or texture)
 enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
 
-GLuint texture1;
-
-const GLuint  NumVertices = 36;
-
-GLuint VAO;
-GLuint indicesEBO;
-GLuint coloursVBO;
-GLuint texturesVB0;
-GLuint verticesVB0;
-
 GLuint shader;
 
 //----------------------------------------------------------------------------
@@ -138,6 +128,8 @@ main(int argc, char** argv)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	delete cubeMesh;
 
 	glfwDestroyWindow(window);
 

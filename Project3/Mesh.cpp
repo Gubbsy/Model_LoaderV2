@@ -1,5 +1,7 @@
 #include "Mesh.h"
 #include "stb_image.h"
+#include "FileReader.h"
+
 #include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -8,6 +10,17 @@ Mesh::Mesh(GLuint* shaderProgram) {
 
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
+
+	FileReader fileReader = FileReader();
+	fileReader.ReadFile("./models/Creeper-obj/creeper.obj", &vertices, &indices, &textures);
+
+	for(int i = 0; i < vertices.size(); i++)
+		cout << vertices[i] << endl;
+
+	for (int i = 0; i < textures.size(); i++)
+		cout << textures[i] << endl;
+
+
 
 	shader = *shaderProgram;
 	// Collection of points to build cube
