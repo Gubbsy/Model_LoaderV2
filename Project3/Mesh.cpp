@@ -14,11 +14,11 @@ Mesh::Mesh(GLuint* shaderProgram) {
 	FileReader fileReader = FileReader();
 	fileReader.ReadFile("./models/Creeper-obj/creeper.obj", &vertices, &indices, &textures);
 
-	for(int i = 0; i < vertices.size(); i++)
-		cout << vertices[i] << endl;
+	//for(int i = 0; i < vertices.size(); i++)
+	//	cout << vertices[i] << endl;
 
-	for (int i = 0; i < textures.size(); i++)
-		cout << textures[i] << endl;
+	//for (int i = 0; i < textures.size(); i++)
+	//	cout << textures[i] << endl;
 
 
 

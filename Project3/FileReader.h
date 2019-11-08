@@ -11,9 +11,10 @@ using namespace std;
 class FileReader
 {
 private:
-
+	void GenVertices();
 
 public:
 	void ReadFile(const char* file, vector<GLfloat>* vertices, vector<GLuint>* indices, vector<GLfloat>* textures);
+	
 };
 
