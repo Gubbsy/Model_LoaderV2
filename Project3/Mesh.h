@@ -1,6 +1,7 @@
 #pragma once
 #include <GL\glew.h>
 #include <vector>
+#include "Vertex.h"
 
 
 #define BUFFER_OFFSET(offset) ((void*)(offset))
@@ -15,22 +16,16 @@ private:
 	GLuint texture1;
 	GLuint shader;
 
-	GLuint VAO;
-	GLuint indicesEBO;
-	GLuint coloursVBO;
-	GLuint texturesVB0;
-	GLuint verticesVB0;
-
-	vector<GLfloat> vertices;
+	vector<Vertex> vertexes;
 	vector<GLuint> indices;
-	vector<GLfloat> colours;
-	vector<GLfloat> textures;
+
+	GLuint VAO;
+	GLuint VBO;
+	GLuint indicesEBO;
 
 
 	void BindIndices();
 	void BindVertices();
-	void BindColours();
-	void BindTextures();
 
 	void ApplyTexture();
 

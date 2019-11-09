@@ -6,15 +6,23 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include "Vertex.h"
 
 using namespace std;
+
+
+
 class FileReader
 {
 private:
-	void GenVertices();
+
+	vector<glm::vec3> vertices;
+	vector<glm::vec2> textures;
+	vector<glm::vec3> normals;
+
 
 public:
-	void ReadFile(const char* file, vector<GLfloat>* vertices, vector<GLuint>* indices, vector<GLfloat>* textures);
+	void ReadFile(const char* file, vector<Vertex>& vertices, vector<GLuint>& indices);
 	
 };
 

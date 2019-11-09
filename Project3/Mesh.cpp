@@ -12,92 +12,24 @@ Mesh::Mesh(GLuint* shaderProgram) {
 	glBindVertexArray(VAO);
 
 	FileReader fileReader = FileReader();
-	fileReader.ReadFile("./models/Creeper-obj/creeper.obj", &vertices, &indices, &textures);
-
-	//for(int i = 0; i < vertices.size(); i++)
-	//	cout << vertices[i] << endl;
-
-	//for (int i = 0; i < textures.size(); i++)
-	//	cout << textures[i] << endl;
-
-
+	fileReader.ReadFile("./models/Creeper-obj/creeper.obj", vertexes, indices);
 
 	shader = *shaderProgram;
-	// Collection of points to build cube
-	vertices = {
-		0.5f,  0.5f, -0.5f,  //0 top right
-		0.5f, -0.5f, -0.5f,  //1 bottom right
-		-0.5f, -0.5f, -0.5f, //2 bottom left
-		-0.5f,  0.5f, -0.5f,  //3 top left
-
-		0.5f,  0.5f, 0.5f,  //4 top right
-		0.5f, -0.5f, 0.5f,  //5 bottom right
-		-0.5f, -0.5f, 0.5f, //6 bottom left
-		-0.5f,  0.5f, 0.5f  //7 top left 
-	};
-
-	// array of indexes refering to vertec points (defined above) 
-	indices = {  // note that we start from 0!
-		0, 3, 1,  // first Triangle front
-		3, 2, 1,   // second Triangle
-
-		4, 7, 0 ,
-		7, 3, 0 ,
-
-		1, 2, 5 ,
-		2, 6, 5 ,
-
-		5, 4, 0 ,
-		0, 1, 5 ,
-
-		2, 3, 7 ,
-		7, 6, 2 ,
-
-		4, 5, 7 ,  // first Triangle back
-		7, 5, 6    // second Triangle
-	};
-
-	// Array of colour values for each corner point (length 4 for RGBA)
-	colours = {
-		 1.0f, 0.0f, 0.0f, 1.0f , //Corner 1
-		 0.0f, 1.0f, 0.0f, 1.0f ,
-		0.0f, 0.0f, 1.0f, 1.0f ,
-		 1.0f, 1.0f, 0.0f, 1.0f,
-		 1.0f, 0.0f, 0.0f, 1.0f ,
-		 0.0f, 1.0f, 0.0f, 1.0f ,
-		 0.0f, 0.0f, 1.0f, 1.0f ,
-		 1.0f, 1.0f, 0.0f, 1.0f
-	};
-
-	// Texture scale to the cube
-	textures = {
-		 1.0f, 1.0f, //Corener 1
-		 1.0f, 0.0f,
-		 0.0f, 0.0f,
-		 0.0f, 1.0f,
-
-		 0.0f, 1.0f,
-		 0.0f, 0.0f,
-		 1.0f, 0.0f,
-		 1.0f, 1.0f,
-
-	};
-
+	
 	BindVertices(); 
 	BindIndices();
-	BindColours();
-	BindTextures();
+
 	ApplyTexture();
 }
 
 void Mesh::BindVertices() {
 
 	// Generate for Buffer arrays 
-	glGenBuffers(1, &verticesVB0);
+	glGenBuffers(1, &VBO);
 
 	// Bining All the vertixes that triangles can be made from (VBO)
-	glBindBuffer(GL_ARRAY_BUFFER, verticesVB0);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(Vertex), &vertexes[0], GL_STATIC_DRAW);
 }
 
 void Mesh::BindIndices() {
@@ -105,38 +37,20 @@ void Mesh::BindIndices() {
 
 	// Binding Contains the combination that from triangles (using the vertexes) [EBO] (for re-using points bassicaly)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
 	// matches to the location on the vertex shader to render postion ASK SWEN!!!!!
 	// This method will point the currently bound buffer to the specified shader locatiion
-	glVertexAttribPointer(vPosition, 3, GL_FLOAT,
-		GL_FALSE, 0, BUFFER_OFFSET(0));
+	glVertexAttribPointer(vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(0));
+	glEnableVertexAttribArray(vPosition);
+
+	//glVertexAttribPointer(nPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, normal)));
+	//glEnableVertexAttribArray(nPosition);
+	
+	glVertexAttribPointer(tPosition, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, texture)));
+	glEnableVertexAttribArray(tPosition);
 }
 
-void Mesh::BindColours() {
-	glGenBuffers(1, &coloursVBO);
-
-	//Colour Binding 
-	glBindBuffer(GL_ARRAY_BUFFER, coloursVBO);
-	glBufferStorage(GL_ARRAY_BUFFER, colours.size() * sizeof(GLfloat), &colours[0], 0);
-
-	// Passes colour intp shader
-	glVertexAttribPointer(cPosition, 4, GL_FLOAT,
-		GL_FALSE, 0, BUFFER_OFFSET(0));
-}
-
-void Mesh::BindTextures() {
-
-	glGenBuffers(1, &texturesVB0);
-
-	//Texture Binding
-	glBindBuffer(GL_ARRAY_BUFFER, texturesVB0);
-	glBufferData(GL_ARRAY_BUFFER, textures.size() * sizeof(GLfloat), &textures[0], GL_STATIC_DRAW);
-
-	//Pass texture to shader
-	glVertexAttribPointer(tPosition, 2, GL_FLOAT,
-		GL_FALSE, 0, BUFFER_OFFSET(0));
-}
 
 void Mesh::ApplyTexture() {
 	//Generate Texture
@@ -157,7 +71,7 @@ void Mesh::ApplyTexture() {
 	GLint width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis (it's loaded upside down).
 	//Creates texture data from resource
-	unsigned char* data = stbi_load("media/textures/awesomeface.png", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("models/Creeper-obj/Texture.png", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		//Creates texture
