@@ -6,20 +6,22 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <map> 
+#include "Material.h"
 #include "Vertex.h"
 
 using namespace std;
-
-
+using namespace glm;
 
 class FileReader
 {
 private:
 
-	vector<glm::vec3> vertices;
-	vector<glm::vec2> textures;
-	vector<glm::vec3> normals;
+	vector<vec3> vertices;
+	vector<vec2> textures;
+	vector<vec3> normals;
 
+	map<string, Material> materialsMap;
 	
 
 public:

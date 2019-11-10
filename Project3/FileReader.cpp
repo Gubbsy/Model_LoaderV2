@@ -2,18 +2,6 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
-#include "Material.h"
-#include <map> 
-
-
-using namespace std;
-
-vector<GLfloat> outVertices;
-vector<GLfloat> outTextures;
-vector<GLuint> outIndices;
-
-map<string, Material> materialsMap;
-
 
 
 void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
@@ -42,31 +30,18 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 
 			//Pull ot vertices
 			if (token[0] == "v") {
-				float vecX = ::atof(token[1].c_str());
-				float vecY = ::atof(token[2].c_str());
-				float vecZ = ::atof(token[3].c_str());
-
-				vertices.push_back(glm::vec3(vecX, vecY, vecZ));
+				vertices.push_back(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
 
 			}
 
 			//Pull out textures
 			if (token[0] == "vt") {
-				float vecS = ::atof(token[1].c_str());
-				float vecT = ::atof(token[2].c_str());
-
-				textures.push_back(glm::vec2(vecS, vecT));
-
+				textures.push_back(vec2(stof(token[1]), stof(token[2])));
 			}
 
 			//Pull out normals
 			if (token[0] == "vn") {
-
-				float vecX = ::atof(token[1].c_str());
-				float vecY = ::atof(token[2].c_str());
-				float vecZ = ::atof(token[3].c_str());
-
-				normals.push_back(glm::vec3(vecX, vecY, vecZ));
+				normals.push_back(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
 			}
 
 			//Pull out faces
@@ -81,9 +56,9 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 
 					int index_counter = 0;
 
-					glm::vec3 temp_pos = glm::vec3(0.0f);
-					glm::vec2 temp_tex = glm::vec2(0.0f);
-					glm::vec3 temp_norm = glm::vec3(0.0f);
+					vec3 temp_pos = vec3(0.0f);
+					vec2 temp_tex = vec2(0.0f);
+					vec3 temp_norm = vec3(0.0f);
 
 					while (getline(faceIss, faceLine, '/')) {
 
@@ -164,15 +139,15 @@ void FileReader::LoadMaterials() {
 				}
 
 				if (token[0] == "Ka") {
-					materialsMap[curerntMtl].SetAmbientCol(glm::vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+					materialsMap[curerntMtl].SetAmbientCol(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
 				}
 
 				if (token[0] == "Kd") {
-					materialsMap[curerntMtl].setDiffuseCol(glm::vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+					materialsMap[curerntMtl].setDiffuseCol(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
 				}
 
 				if (token[0] == "Ka") {
-					materialsMap[curerntMtl].SetSpecularCol(glm::vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+					materialsMap[curerntMtl].SetSpecularCol(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
 				}
 
 				if (token[0] == "d") {

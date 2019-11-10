@@ -3,7 +3,6 @@
 #include <vector>
 #include "Vertex.h"
 
-
 #define BUFFER_OFFSET(offset) ((void*)(offset))
 
 using namespace std;
@@ -32,7 +31,6 @@ private:
 public: 
 	Mesh(GLuint* shaderProgram);
 	void Draw();
-	
-	
+
 };
 

@@ -103,6 +103,10 @@ display (Mesh* mesh)
 int
 main(int argc, char** argv)
 {
+	string modelPath;
+	cout << "enter your file path: ";
+	cin >> modelPath;
+
 	glfwInit();
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Cube", NULL, NULL);
