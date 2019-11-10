@@ -45,6 +45,7 @@ init(void)
 	//Read in shaders and use them
 	shader = LoadShaders(shaders);
 	glUseProgram(shader);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 }
 
 
@@ -56,9 +57,8 @@ init(void)
 void
 display (Mesh* mesh)
 {
-	static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-	glClearBufferfv(GL_COLOR, 0, black);
+	//glClearBufferfv(GL_COLOR, 0, black);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// bind textures on corresponding texture units
 	glFrontFace(GL_CW);
@@ -67,16 +67,20 @@ display (Mesh* mesh)
 
 	//Created matrices
 	glm::mat4 model = glm::mat4(1.0f);
+	/*model = glm::scale(model, glm::vec3(0.01f, 0.01, 0.01));
+	model = glm::rotate(model, glm::radians((float)glfwGetTime()* 30) , glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));*/
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.f, 0.0f));
+	model = glm::rotate(model, glm::radians((float)glfwGetTime() * 30), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	model = glm::rotate(model, glm::radians((float)glfwGetTime()* 30) , glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	// creating the view matrix
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -600.0f));
 
 	// creating the projection matrix
-	glm::mat4 projection = glm::perspective(45.0f, 4.0f / 3, 0.1f, 20.0f);
+	glm::mat4 projection = glm::perspective(45.0f, 4.0f / 3, 0.1f, 1000.0f);
 
 	// Adding all matrices up to create combined matrix
 	glm::mat4 mvp = projection * view * model;
@@ -87,8 +91,6 @@ display (Mesh* mesh)
 	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
 	mesh->Draw();
-
-	
 }
 
 

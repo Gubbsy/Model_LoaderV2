@@ -12,7 +12,7 @@ Mesh::Mesh(GLuint* shaderProgram) {
 	glBindVertexArray(VAO);
 
 	FileReader fileReader = FileReader();
-	fileReader.ReadFile("./models/Creeper-obj/creeper.obj", vertexes, indices);
+	fileReader.ReadFile("./models/low_poly_boat/low_poly_boat.obj", vertexes, indices);
 
 	shader = *shaderProgram;
 	

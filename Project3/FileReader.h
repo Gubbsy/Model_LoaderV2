@@ -20,9 +20,10 @@ private:
 	vector<glm::vec2> textures;
 	vector<glm::vec3> normals;
 
+	
 
 public:
 	void ReadFile(const char* file, vector<Vertex>& vertices, vector<GLuint>& indices);
-	
+	void LoadMaterials();
 };
 

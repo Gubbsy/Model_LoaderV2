@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include "Material.h"
+#include <map> 
+
 
 using namespace std;
 
@@ -9,6 +12,7 @@ vector<GLfloat> outVertices;
 vector<GLfloat> outTextures;
 vector<GLuint> outIndices;
 
+map<string, Material> materialsMap;
 
 
 
@@ -17,8 +21,7 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 	int indicesOffSet = 0;
 
 	string line = "";
-	int lineLength;
-	ifstream myFile(file);
+	ifstream myFile(file); 
 
 	if (myFile.is_open()) {
 
@@ -28,10 +31,16 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 			vector<string> token;
 			istringstream iss(line);
 
+
 			for (string s; iss >> s; ) {
 				token.push_back(s);
 			}
 
+			if (token[0] == "mtllib") {
+				LoadMaterials();
+			}
+
+			//Pull ot vertices
 			if (token[0] == "v") {
 				float vecX = ::atof(token[1].c_str());
 				float vecY = ::atof(token[2].c_str());
@@ -41,6 +50,7 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 
 			}
 
+			//Pull out textures
 			if (token[0] == "vt") {
 				float vecS = ::atof(token[1].c_str());
 				float vecT = ::atof(token[2].c_str());
@@ -49,6 +59,7 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 
 			}
 
+			//Pull out normals
 			if (token[0] == "vn") {
 
 				float vecX = ::atof(token[1].c_str());
@@ -58,10 +69,11 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 				normals.push_back(glm::vec3(vecX, vecY, vecZ));
 			}
 
-
+			//Pull out faces
 			if (token[0] == "f") {
 				vector<string> verts;
-
+				
+				//for every set of vertex indices
 				for (int i = 1; i < token.size(); i++) {
 					string faceLine = "";
 					vector<string> faceToken;
@@ -75,11 +87,11 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 
 					while (getline(faceIss, faceLine, '/')) {
 
-						//if 0 fetch from vertex
+						//if 0 fetch vertices
 						if (index_counter == 0) {
 							temp_pos = vertices[stoi(faceLine) -1];
 						}
-						// if 1 fecthc from texture
+						// if 1 fetch from texture
 						else if (index_counter == 1) {
 							temp_tex = textures[stoi(faceLine) -1];
 						}
@@ -91,9 +103,11 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 						index_counter++;
 					}
 
+					//Add to list of vertexes
 					vertexes.push_back(Vertex(temp_pos, temp_tex, temp_norm));
 				}
 
+				//Generate indices based on number of vertices that make up a face
 				if (token.size() - 1 == 4) {
 					indices.push_back(2 + indicesOffSet);
 					indices.push_back(1 + indicesOffSet);
@@ -102,7 +116,7 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 					indices.push_back(2 + indicesOffSet);
 					indices.push_back(0 + indicesOffSet);
 					indicesOffSet = indicesOffSet + 4;
-					cout << "IndicesOffset: " << indicesOffSet << endl;
+					//cout << "IndicesOffset: " << indicesOffSet << endl;
 				}
 				else if (token.size() - 1 == 3) {
 					indices.push_back(2 + indicesOffSet);
@@ -112,51 +126,74 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 				}
 			}
 		}
-
-	/*	indices.push_back(2);
-		indices.push_back(1);
-		indices.push_back(0);
-		indices.push_back(3);
-		indices.push_back(2);
-		indices.push_back(0);
-		
-		indices.push_back(2 + 4);
-		indices.push_back(1 + 4);
-		indices.push_back(0 + 4);
-		indices.push_back(3 + 4);
-		indices.push_back(2 + 4);
-		indices.push_back(0 + 4);
-		
-		indices.push_back(2 + 8);
-		indices.push_back(1 + 8);
-		indices.push_back(0 + 8);
-		indices.push_back(3 + 8);
-		indices.push_back(2 + 8);
-		indices.push_back(0 + 8);
-		
-		indices.push_back(2 + 12);
-		indices.push_back(1 + 12);
-		indices.push_back(0 + 12);
-		indices.push_back(3 + 12);
-		indices.push_back(2 + 12);
-		indices.push_back(0 + 12);
-		
-		indices.push_back(2 + 16);
-		indices.push_back(1 + 16);
-		indices.push_back(0 + 16);
-		indices.push_back(3 + 16);
-		indices.push_back(2 + 16);
-		indices.push_back(0 + 16);
-		
-		indices.push_back(2 + 20);
-		indices.push_back(1 + 20);
-		indices.push_back(0 + 20);
-		indices.push_back(3 + 20);
-		indices.push_back(2 + 20);
-		indices.push_back(0 + 20);*/
 	}
 	else {
 		cout << "Cannot open File" << endl;
 	}
+}
+
+void FileReader::LoadMaterials() {
+	string curerntMtl = "";
+
+	string line = "";
+	ifstream myFile("./models/low_poly_boat/low_poly_boat.mtl" );
+	
+	if (myFile.is_open()) {
+
+		while (getline(myFile, line)) {
+			vector<string> token;
+			istringstream iss(line);
+
+			for (string s; iss >> s; ) {
+				token.push_back(s);
+			}
+
+			if (token.size() > 0) {
+
+				if (token[0] == "newmtl") {
+					curerntMtl = token[1];
+
+					Material newMaterial = Material();
+					materialsMap[curerntMtl] = newMaterial;
+					materialsMap[curerntMtl].SetName(token[1]);
+				}
+
+				if (token[0] == "Ns") {
+					materialsMap[curerntMtl].SetSpecularWeight(stof(token[1]));
+					cout << "NS token " << token[1] << endl;
+				}
+
+				if (token[0] == "Ka") {
+					materialsMap[curerntMtl].SetAmbientCol(glm::vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+				}
+
+				if (token[0] == "Kd") {
+					materialsMap[curerntMtl].setDiffuseCol(glm::vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+				}
+
+				if (token[0] == "Ka") {
+					materialsMap[curerntMtl].SetSpecularCol(glm::vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+				}
+
+				if (token[0] == "d") {
+					materialsMap[curerntMtl].SetDifuse(stof(token[1]));
+				}
+
+				if (token[0] == "map_Kd") {
+					materialsMap[curerntMtl].SetMapKD(token[1]);
+				}
+
+				if (token[0] == "map_d") {
+					materialsMap[curerntMtl].SetMapD(token[1]);
+				}
+			}
+		}
+	}
+	else
+	{
+		cout << "unable to read material file" << endl;
+	}
+
+	cout << "Matmap size: " << materialsMap.size() << endl;
 
 }
