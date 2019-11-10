@@ -68,7 +68,7 @@ display (Mesh* mesh)
 	//Created matrices
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	model = glm::rotate(model, glm::radians((float)glfwGetTime()* 20) , glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians((float)glfwGetTime()* 30) , glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 
 	// creating the view matrix
@@ -114,8 +114,8 @@ main(int argc, char** argv)
 
 	while (!glfwWindowShouldClose(window))
 	{
-		// uncomment to draw only wireframe 
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//uncomment to draw only wireframe 
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		display(cubeMesh);
 		glfwSwapBuffers(window);

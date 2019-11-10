@@ -10,7 +10,11 @@ vector<GLfloat> outTextures;
 vector<GLuint> outIndices;
 
 
+
+
 void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
+
+	int indicesOffSet = 0;
 
 	string line = "";
 	int lineLength;
@@ -88,19 +92,28 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 					}
 
 					vertexes.push_back(Vertex(temp_pos, temp_tex, temp_norm));
+				}
 
+				if (token.size() - 1 == 4) {
+					indices.push_back(2 + indicesOffSet);
+					indices.push_back(1 + indicesOffSet);
+					indices.push_back(0 + indicesOffSet);
+					indices.push_back(3 + indicesOffSet);
+					indices.push_back(2 + indicesOffSet);
+					indices.push_back(0 + indicesOffSet);
+					indicesOffSet = indicesOffSet + 4;
+					cout << "IndicesOffset: " << indicesOffSet << endl;
+				}
+				else if (token.size() - 1 == 3) {
+					indices.push_back(2 + indicesOffSet);
+					indices.push_back(1 + indicesOffSet);
+					indices.push_back(0 + indicesOffSet);
+					indicesOffSet = indicesOffSet + 3;
 				}
 			}
 		}
 
-		for (int i = 0; i < normals.size(); i++) {
-			cout << "Normals: " << normals[i].x << " " << normals[i].y << " " << normals[i].z << endl;
-		}
-
-		cout << "Size of vertexes: " << vertexes.size() << endl;
-		cout << "Size of normals: " << normals.size() << endl;
-
-		indices.push_back(2);
+	/*	indices.push_back(2);
 		indices.push_back(1);
 		indices.push_back(0);
 		indices.push_back(3);
@@ -140,7 +153,7 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 		indices.push_back(0 + 20);
 		indices.push_back(3 + 20);
 		indices.push_back(2 + 20);
-		indices.push_back(0 + 20);
+		indices.push_back(0 + 20);*/
 	}
 	else {
 		cout << "Cannot open File" << endl;
