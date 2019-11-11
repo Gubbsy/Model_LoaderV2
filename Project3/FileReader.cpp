@@ -4,12 +4,16 @@
 #include <sstream>
 
 
-bool FileReader::ReadFile(string file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
+bool FileReader::ReadFile(string _file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
+	
+	file = _file;
 
 	int indicesOffSet = 0;
 
 	string line = "";
 	ifstream myFile(file); 
+
+	ConstructFolderTree();
 
 	if (myFile.is_open()) {
 
@@ -25,6 +29,7 @@ bool FileReader::ReadFile(string file, vector<Vertex>& vertexes, vector<GLuint>&
 			}
 
 			if (token[0] == "mtllib") {
+				mtLib = token[1];
 				LoadMaterials();
 			}
 
@@ -109,11 +114,30 @@ bool FileReader::ReadFile(string file, vector<Vertex>& vertexes, vector<GLuint>&
 	}
 }
 
+void FileReader::ConstructFolderTree()
+{
+	relFolderTree = ".";
+	std::stringstream ss(file);
+	std::string folder;
+	std::vector<std::string> components;
+
+	while (std::getline(ss, folder, '/'))
+	{
+		components.push_back(folder);
+	}
+	
+	for (int i = 0; i < components.size() -1; i++) {
+		relFolderTree = relFolderTree + "/" + components[i];
+	}
+
+	cout << relFolderTree << endl;
+}
+
 void FileReader::LoadMaterials() {
 	string curerntMtl = "";
 
 	string line = "";
-	ifstream myFile("./models/low_poly_boat/low_poly_boat.mtl" );
+	ifstream myFile(relFolderTree + "/" + mtLib );
 	
 	if (myFile.is_open()) {
 

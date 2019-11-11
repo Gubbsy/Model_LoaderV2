@@ -17,6 +17,9 @@ class FileReader
 {
 private:
 
+	string file;
+	string mtLib;
+	string relFolderTree;
 	vector<vec3> vertices;
 	vector<vec2> textures;
 	vector<vec3> normals;
@@ -25,7 +28,8 @@ private:
 	
 
 public:
-	bool ReadFile(string file, vector<Vertex>& vertices, vector<GLuint>& indices);
+	bool ReadFile(string _file, vector<Vertex>& vertices, vector<GLuint>& indices);
+	void ConstructFolderTree();
 	void LoadMaterials();
 };
 

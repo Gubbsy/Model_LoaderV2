@@ -67,11 +67,8 @@ display (Mesh* mesh)
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 
-	//Created matrices
+	//Created matricesW
 	glm::mat4 model = glm::mat4(1.0f);
-	/*model = glm::scale(model, glm::vec3(0.01f, 0.01, 0.01));
-	model = glm::rotate(model, glm::radians((float)glfwGetTime()* 30) , glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));*/
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.f, 0.0f));
 	model = glm::rotate(model, glm::radians((float)glfwGetTime() * 30), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -100,7 +97,6 @@ display (Mesh* mesh)
 //
 // main
 //
-
 
 int
 main(int argc, char** argv)

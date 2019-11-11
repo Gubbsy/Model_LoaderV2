@@ -24,7 +24,6 @@ Mesh::Mesh(GLuint* shaderProgram, string& modelLoc) {
 
 		ApplyTexture();
 	}
-
 }
 
 
