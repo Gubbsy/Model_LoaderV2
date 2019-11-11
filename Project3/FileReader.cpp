@@ -4,7 +4,7 @@
 #include <sstream>
 
 
-void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
+bool FileReader::ReadFile(string file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
 
 	int indicesOffSet = 0;
 
@@ -101,9 +101,11 @@ void FileReader::ReadFile(const char* file, vector<Vertex>& vertexes, vector<GLu
 				}
 			}
 		}
+		return true;
 	}
 	else {
 		cout << "Cannot open File" << endl;
+		return false;
 	}
 }
 

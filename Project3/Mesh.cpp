@@ -6,21 +6,28 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
-Mesh::Mesh(GLuint* shaderProgram) {
 
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+using namespace std;
+
+Mesh::Mesh(GLuint* shaderProgram, string& modelLoc) {
 
 	FileReader fileReader = FileReader();
-	fileReader.ReadFile("./models/low_poly_boat/low_poly_boat.obj", vertexes, indices);
+	canReadFile = fileReader.ReadFile(modelLoc, vertexes, indices);
 
-	shader = *shaderProgram;
-	
-	BindVertices(); 
-	BindIndices();
+	if (canReadFile) {
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
+		shader = *shaderProgram;
 
-	ApplyTexture();
+		BindVertices();
+		BindIndices();
+
+		ApplyTexture();
+	}
+
 }
+
+
 
 void Mesh::BindVertices() {
 
@@ -89,6 +96,7 @@ void Mesh::ApplyTexture() {
 	glUniform1i(glGetUniformLocation(shader, "texture1"), 0);
 
 }
+
 
 void Mesh::Draw() {
 	glBindVertexArray(VAO);

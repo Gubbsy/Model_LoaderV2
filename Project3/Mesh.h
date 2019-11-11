@@ -2,10 +2,10 @@
 #include <GL\glew.h>
 #include <vector>
 #include "Vertex.h"
+#include <string>
 
 #define BUFFER_OFFSET(offset) ((void*)(offset))
 
-using namespace std;
 
 class Mesh
 {
@@ -15,12 +15,14 @@ private:
 	GLuint texture1;
 	GLuint shader;
 
-	vector<Vertex> vertexes;
-	vector<GLuint> indices;
+	std::vector<Vertex> vertexes;
+	std::vector<GLuint> indices;
 
 	GLuint VAO;
 	GLuint VBO;
 	GLuint indicesEBO;
+
+	bool canReadFile;
 
 
 	void BindIndices();
@@ -29,7 +31,7 @@ private:
 	void ApplyTexture();
 
 public: 
-	Mesh(GLuint* shaderProgram);
+	Mesh(GLuint* shaderProgram, std::string& modelLoc);
 	void Draw();
 
 };

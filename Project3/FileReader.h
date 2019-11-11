@@ -25,7 +25,7 @@ private:
 	
 
 public:
-	void ReadFile(const char* file, vector<Vertex>& vertices, vector<GLuint>& indices);
+	bool ReadFile(string file, vector<Vertex>& vertices, vector<GLuint>& indices);
 	void LoadMaterials();
 };
 

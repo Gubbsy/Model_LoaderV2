@@ -26,6 +26,8 @@ enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
 
 GLuint shader;
 
+using namespace std;
+
 //----------------------------------------------------------------------------
 //
 // init
@@ -77,7 +79,7 @@ display (Mesh* mesh)
 
 	// creating the view matrix
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -600.0f));
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 	// creating the projection matrix
 	glm::mat4 projection = glm::perspective(45.0f, 4.0f / 3, 0.1f, 1000.0f);
@@ -104,7 +106,7 @@ int
 main(int argc, char** argv)
 {
 	string modelPath;
-	cout << "enter your file path: ";
+	cout << "enter the relative file path to your model: ";
 	cin >> modelPath;
 
 	glfwInit();
@@ -114,7 +116,7 @@ main(int argc, char** argv)
 	glfwMakeContextCurrent(window);
 	glewInit();
 
-	Mesh* cubeMesh = new Mesh(&shader);
+	Mesh* cubeMesh = new Mesh(&shader, modelPath);
 
 	init();
 
