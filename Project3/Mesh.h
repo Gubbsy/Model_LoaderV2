@@ -34,7 +34,7 @@ private:
 
 public: 
 	Mesh();
-	void Draw(GLuint shaderProgram);
+	void Draw(GLuint& shaderProgram);
 	void AddVertexes(std::vector<Vertex>& _vertexes);
 	void AddIndices(std::vector<GLuint>& _indices);
 	void AddMaterial(Material _material);

@@ -12,6 +12,6 @@ private:
 public:
 	Model();
 	void AddObject(Object object);
-	void Draw(GLuint shader);
+	void Draw(GLuint& shader);
 };
 

@@ -11,6 +11,7 @@ using namespace std;
 Mesh::Mesh() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &indicesEBO);
+	ApplyTexture();
 }
 
 void Mesh::BindVertices() {
@@ -61,7 +62,7 @@ void Mesh::ApplyTexture() {
 	GLint width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis (it's loaded upside down).
 	//Creates texture data from resource
-	unsigned char* data = stbi_load("models/creeper-obj/creeper.obj", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("models/creeper/Texture.png", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		//Creates texture
@@ -81,14 +82,12 @@ void Mesh::ApplyTexture() {
 }
 
 
-void Mesh::Draw(GLuint shaderProgram) {
+void Mesh::Draw(GLuint& shaderProgram) {
 
 	glBindVertexArray(VAO);
 
 	BindVertices();
 	BindIndices();
-
-	ApplyTexture();
 
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_2D, texture1);

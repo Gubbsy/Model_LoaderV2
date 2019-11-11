@@ -1,6 +1,5 @@
 #include "FileReader.h"
 
-
 Model FileReader::ReadFile(string _file) {
 	file = _file;
 	string line = "";
