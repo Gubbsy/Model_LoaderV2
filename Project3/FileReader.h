@@ -7,8 +7,13 @@
 #include <string>
 #include <fstream>
 #include <map> 
+#include <iostream>
+#include <cstring>
+#include <sstream>
+#include "Object.h"
 #include "Material.h"
 #include "Vertex.h"
+#include "Model.h"
 
 using namespace std;
 using namespace glm;
@@ -26,10 +31,13 @@ private:
 
 	map<string, Material> materialsMap;
 	
+	vector<Vertex> vertexes;
+	vector<GLuint> indices;
 
 public:
-	bool ReadFile(string _file, vector<Vertex>& vertices, vector<GLuint>& indices);
+	Model ReadFile(string _file);
 	void ConstructFolderTree();
 	void LoadMaterials();
+	void SplitOnSpace(vector<string>& token, string& stringToSplit);
 };
 

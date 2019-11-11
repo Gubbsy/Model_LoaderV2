@@ -6,27 +6,12 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
-
 using namespace std;
 
-Mesh::Mesh(GLuint* shaderProgram, string& modelLoc) {
-
-	FileReader fileReader = FileReader();
-	canReadFile = fileReader.ReadFile(modelLoc, vertexes, indices);
-
-	if (canReadFile) {
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-		shader = *shaderProgram;
-
-		BindVertices();
-		BindIndices();
-
-		ApplyTexture();
-	}
+Mesh::Mesh() {
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &indicesEBO);
 }
-
-
 
 void Mesh::BindVertices() {
 
@@ -39,7 +24,6 @@ void Mesh::BindVertices() {
 }
 
 void Mesh::BindIndices() {
-	glGenBuffers(1, &indicesEBO);
 
 	// Binding Contains the combination that from triangles (using the vertexes) [EBO] (for re-using points bassicaly)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesEBO);
@@ -77,7 +61,7 @@ void Mesh::ApplyTexture() {
 	GLint width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis (it's loaded upside down).
 	//Creates texture data from resource
-	unsigned char* data = stbi_load("models/Creeper-obj/Texture.png", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load("models/creeper-obj/creeper.obj", &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		//Creates texture
@@ -97,8 +81,34 @@ void Mesh::ApplyTexture() {
 }
 
 
-void Mesh::Draw() {
+void Mesh::Draw(GLuint shaderProgram) {
+
+	glBindVertexArray(VAO);
+
+	BindVertices();
+	BindIndices();
+
+	ApplyTexture();
+
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
+
+void Mesh::AddVertexes(vector<Vertex>& _vertexes)
+{
+	vertexes = _vertexes;
+}
+
+void Mesh::AddIndices(std::vector<GLuint>& _indices)
+{
+	indices = _indices;
+}
+
+void Mesh::AddMaterial(Material _material)
+{
+	material = _material;
+}
+
+
+

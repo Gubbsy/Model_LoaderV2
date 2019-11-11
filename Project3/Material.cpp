@@ -31,3 +31,8 @@ void Material::SetMapKD(string _mapKD) {
 void Material::SetMapD(string _mapD) {
 	mapD = _mapD;
 }
+
+string& Material::GetMaterial()
+{
+	return mapD;
+}

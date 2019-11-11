@@ -29,5 +29,7 @@ public:
 	void SetDifuse(GLfloat _diffuse);
 	void SetMapKD(string _mapKD);
 	void SetMapD(string _mapD);
+	
+	string& GetMaterial();
 };
 

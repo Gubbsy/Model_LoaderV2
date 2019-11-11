@@ -1,18 +1,18 @@
 #include "FileReader.h"
-#include <iostream>
-#include <cstring>
-#include <sstream>
 
 
-bool FileReader::ReadFile(string _file, vector<Vertex>& vertexes, vector<GLuint>& indices) {
-	
+Model FileReader::ReadFile(string _file) {
 	file = _file;
-
+	string line = "";
+	ifstream myFile(file);
 	int indicesOffSet = 0;
 
-	string line = "";
-	ifstream myFile(file); 
+	Material currentMaterial;
 
+	Model* model = new Model();
+	Object* tempObject = nullptr;
+	Mesh* tempMesh = nullptr;
+	
 	ConstructFolderTree();
 
 	if (myFile.is_open()) {
@@ -21,22 +21,26 @@ bool FileReader::ReadFile(string _file, vector<Vertex>& vertexes, vector<GLuint>
 		while (getline(myFile, line)) {
 
 			vector<string> token;
-			istringstream iss(line);
+			SplitOnSpace(token, line);
 
-
-			for (string s; iss >> s; ) {
-				token.push_back(s);
-			}
-
+			//Load in material file and asign it to model
 			if (token[0] == "mtllib") {
 				mtLib = token[1];
 				LoadMaterials();
 			}
 
+			// Find new object in file, if current object in memeory create new object, create new object.
+			if (token[0] == "o") {
+				cout << "Object " << token[1] << endl;
+				if (tempObject != nullptr) {
+					model->AddObject(*tempObject);
+				}
+				tempObject = new Object();
+			}
+
 			//Pull ot vertices
 			if (token[0] == "v") {
 				vertices.push_back(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
-
 			}
 
 			//Pull out textures
@@ -47,6 +51,21 @@ bool FileReader::ReadFile(string _file, vector<Vertex>& vertexes, vector<GLuint>
 			//Pull out normals
 			if (token[0] == "vn") {
 				normals.push_back(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
+			}
+
+			if (token[0] == "usemtl") {
+				if (tempMesh != nullptr) {
+					currentMaterial = materialsMap[token[0]];
+					tempMesh->AddMaterial(currentMaterial);
+					tempMesh->AddVertexes(vertexes);
+					tempMesh->AddIndices(indices);
+					tempObject->AddMesh(*tempMesh);
+					vertexes.clear();
+					vertexes.clear();
+				}
+				else {
+					tempMesh = new Mesh();
+				}
 			}
 
 			//Pull out faces
@@ -106,11 +125,16 @@ bool FileReader::ReadFile(string _file, vector<Vertex>& vertexes, vector<GLuint>
 				}
 			}
 		}
-		return true;
+		tempMesh->AddMaterial(currentMaterial);
+		tempMesh->AddVertexes(vertexes);
+		tempMesh->AddIndices(indices);
+		tempObject->AddMesh(*tempMesh);
+		model->AddObject(*tempObject);
+		
+		return *model;
 	}
 	else {
 		cout << "Cannot open File" << endl;
-		return false;
 	}
 }
 
@@ -140,14 +164,9 @@ void FileReader::LoadMaterials() {
 	ifstream myFile(relFolderTree + "/" + mtLib );
 	
 	if (myFile.is_open()) {
-
 		while (getline(myFile, line)) {
 			vector<string> token;
-			istringstream iss(line);
-
-			for (string s; iss >> s; ) {
-				token.push_back(s);
-			}
+			SplitOnSpace(token, line);
 
 			if (token.size() > 0) {
 
@@ -196,5 +215,16 @@ void FileReader::LoadMaterials() {
 	}
 
 	cout << "Matmap size: " << materialsMap.size() << endl;
-
 }
+
+void FileReader::SplitOnSpace(vector<string>& token, string& stringToSplit)
+{
+	istringstream iss(stringToSplit);
+
+	for (string s; iss >> s; ) {
+		token.push_back(s);
+	}
+}
+
+
+

@@ -17,16 +17,17 @@
 #include <iostream>
 #include <vector>
 #include "Mesh.h"
+#include "FileReader.h"
+#include "Model.h"
 
 // to use this example you will need to download the header files for GLM put them into a folder which you will reference in
 // properties -> VC++ Directories -> libraries
 
 // Each attribute matches to a location in the vertex shader (for either postion, colour or texture)
 enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
+using namespace std;
 
 GLuint shader;
-
-using namespace std;
 
 //----------------------------------------------------------------------------
 //
@@ -57,7 +58,7 @@ init(void)
 //s
 
 void
-display (Mesh* mesh)
+display (Model& _mod)
 {
 
 	//glClearBufferfv(GL_COLOR, 0, black);
@@ -89,7 +90,7 @@ display (Mesh* mesh)
 	int mvpLoc = glGetUniformLocation(shader, "mvp");
 	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
 
-	mesh->Draw();
+	_mod.Draw(shader);
 }
 
 
@@ -101,6 +102,7 @@ display (Mesh* mesh)
 int
 main(int argc, char** argv)
 {
+	Model mod;
 	string modelPath;
 	cout << "enter the relative file path to your model: ";
 	cin >> modelPath;
@@ -111,8 +113,9 @@ main(int argc, char** argv)
 
 	glfwMakeContextCurrent(window);
 	glewInit();
-
-	Mesh* cubeMesh = new Mesh(&shader, modelPath);
+	
+	FileReader* fileReader = new FileReader();
+	mod = fileReader->ReadFile(modelPath);
 
 	init();
 
@@ -121,12 +124,10 @@ main(int argc, char** argv)
 		//uncomment to draw only wireframe 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		display(cubeMesh);
+		display(mod);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-	delete cubeMesh;
 
 	glfwDestroyWindow(window);
 

@@ -1,7 +1,9 @@
 #pragma once
 #include <GL\glew.h>
 #include <vector>
+#include "Material.h"
 #include "Vertex.h"
+#include <string>
 #include <string>
 
 #define BUFFER_OFFSET(offset) ((void*)(offset))
@@ -22,17 +24,19 @@ private:
 	GLuint VBO;
 	GLuint indicesEBO;
 
-	bool canReadFile;
+	Material material;
 
+	bool canReadFile;
 
 	void BindIndices();
 	void BindVertices();
-
 	void ApplyTexture();
 
 public: 
-	Mesh(GLuint* shaderProgram, std::string& modelLoc);
-	void Draw();
-
+	Mesh();
+	void Draw(GLuint shaderProgram);
+	void AddVertexes(std::vector<Vertex>& _vertexes);
+	void AddIndices(std::vector<GLuint>& _indices);
+	void AddMaterial(Material _material);
 };
 
