@@ -25,18 +25,14 @@ private:
 	GLuint indicesEBO;
 
 	Material material;
-
-	bool canReadFile;
+	string folderTree;
 
 	void BindIndices();
 	void BindVertices();
 	void ApplyTexture();
 
 public: 
-	Mesh();
+	void Init(std::vector<Vertex>& _vertexes, std::vector<GLuint>& _indices, Material& _material, string& _fileTree);
 	void Draw(GLuint& shaderProgram);
-	void AddVertexes(std::vector<Vertex>& _vertexes);
-	void AddIndices(std::vector<GLuint>& _indices);
-	void AddMaterial(Material _material);
 };
 

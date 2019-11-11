@@ -55,9 +55,7 @@ Model FileReader::ReadFile(string _file) {
 			if (token[0] == "usemtl") {
 				if (tempMesh != nullptr) {
 					currentMaterial = materialsMap[token[0]];
-					tempMesh->AddMaterial(currentMaterial);
-					tempMesh->AddVertexes(vertexes);
-					tempMesh->AddIndices(indices);
+					tempMesh->Init(vertexes, indices, currentMaterial, relFolderTree);
 					tempObject->AddMesh(*tempMesh);
 					vertexes.clear();
 					vertexes.clear();
@@ -124,9 +122,7 @@ Model FileReader::ReadFile(string _file) {
 				}
 			}
 		}
-		tempMesh->AddMaterial(currentMaterial);
-		tempMesh->AddVertexes(vertexes);
-		tempMesh->AddIndices(indices);
+		tempMesh->Init(vertexes, indices, currentMaterial, relFolderTree);
 		tempObject->AddMesh(*tempMesh);
 		model->AddObject(*tempObject);
 		

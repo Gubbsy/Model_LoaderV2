@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Material.h"
 #include <map>
+#include <glm/glm.hpp> //includes GLM
 
 class Model
 {

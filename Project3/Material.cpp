@@ -32,7 +32,7 @@ void Material::SetMapD(string _mapD) {
 	mapD = _mapD;
 }
 
-string& Material::GetMaterial()
+string& Material::GetMapD()
 {
 	return mapD;
 }
