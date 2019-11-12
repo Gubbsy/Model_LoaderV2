@@ -70,7 +70,7 @@ main(int argc, char** argv)
 {
 	Model mod;
 	string modelPath;
-	cout << "enter the relative file path to your model: ";
+	cout << "enter the relative file path to your model -->  ./";
 	cin >> modelPath;
 
 	glfwInit();

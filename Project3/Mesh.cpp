@@ -15,7 +15,6 @@ void Mesh::Init(std::vector<Vertex>& _vertexes, std::vector<GLuint>& _indices, M
 	glGenBuffers(1, &VBO);
 
 	glBindVertexArray(VAO);
-	ApplyTexture();
 
 	vertexes = _vertexes;
 	indices = _indices;
@@ -25,6 +24,7 @@ void Mesh::Init(std::vector<Vertex>& _vertexes, std::vector<GLuint>& _indices, M
 
 	BindVertices();
 	BindIndices();
+	ApplyTexture();
 }
 
 void Mesh::BindVertices() {
@@ -69,9 +69,10 @@ void Mesh::ApplyTexture() {
 	//Create 'Space'
 	GLint width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis (it's loaded upside down).
+	
 	//Creates texture data from resource
 	string texturePath = folderTree + material.GetMapD();
-	cout << "This is texture path: " << material.GetMapD() << endl;
+	cout << "This is texture path: " << texturePath << endl;
 	unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{

@@ -53,16 +53,15 @@ Model FileReader::ReadFile(string _file) {
 			}
 
 			if (token[0] == "usemtl") {
+				string materialKey = token[1];
+				currentMaterial = materialsMap[materialKey];
 				if (tempMesh != nullptr) {
-					currentMaterial = materialsMap[token[0]];
 					tempMesh->Init(vertexes, indices, currentMaterial, relFolderTree);
 					tempObject->AddMesh(*tempMesh);
 					vertexes.clear();
 					vertexes.clear();
 				}
-				else {
-					tempMesh = new Mesh();
-				}
+				tempMesh = new Mesh();
 			}
 
 			//Pull out faces
@@ -148,6 +147,8 @@ void FileReader::ConstructFolderTree()
 	for (int i = 0; i < components.size() -1; i++) {
 		relFolderTree = relFolderTree + "/" + components[i];
 	}
+
+	relFolderTree += "/";
 
 	cout << relFolderTree << endl;
 }
