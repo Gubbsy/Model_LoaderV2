@@ -1,18 +1,14 @@
 #include "FileReader.h"
 
 Model FileReader::ReadFile(string _file) {
+	Material currentMaterial;
+
 	file = _file;
 	string line = "";
 	ifstream myFile(file);
 	int indicesOffSet = 0;
 
-	vertexes.clear();
-	indices.clear();
-	vertices.clear();
-	textures.clear();
-	normals.clear();
-
-	Material currentMaterial;
+	ResetReader();
 
 	Model* model = new Model();
 	Object* tempObject = nullptr;
@@ -135,6 +131,19 @@ Model FileReader::ReadFile(string _file) {
 	else {
 		cout << "Cannot open File" << endl;
 	}
+}
+
+void FileReader::ResetReader()
+{
+	vertexes.clear();
+	indices.clear();
+	vertices.clear();
+	textures.clear();
+	normals.clear();
+	materialsMap.clear();
+
+	mtLib = "";
+	relFolderTree = "";
 }
 
 void FileReader::ConstructFolderTree()

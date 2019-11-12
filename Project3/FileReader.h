@@ -22,20 +22,23 @@ class FileReader
 {
 private:
 
-	string file;
 	string mtLib;
 	string relFolderTree;
+
+	string file;
+
 	vector<vec3> vertices;
 	vector<vec2> textures;
 	vector<vec3> normals;
 
-	map<string, Material> materialsMap;
-	
 	vector<Vertex> vertexes;
 	vector<GLuint> indices;
 
+	map<string, Material> materialsMap;
+
 public:
 	Model ReadFile(string _file);
+	void ResetReader();
 	void ConstructFolderTree();
 	void LoadMaterials();
 	void SplitOnSpace(vector<string>& token, string& stringToSplit);
