@@ -2,7 +2,6 @@
 
 Model FileReader::ReadFile(string _file) {
 	Material currentMaterial;
-
 	file = _file;
 	string line = "";
 	ifstream myFile(file);

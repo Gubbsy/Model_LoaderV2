@@ -28,11 +28,9 @@ enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
 using namespace std;
 
 GLuint shader;
+Model CurrentModel;
 
-//----------------------------------------------------------------------------
-//
-// init
-//
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 void
 init(void)
@@ -85,6 +83,7 @@ main(int argc, char** argv)
 	glfwInit();
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Cube", NULL, NULL);
+	CurrentModel = mod2;
 
 	glfwMakeContextCurrent(window);
 	glewInit();
@@ -97,6 +96,8 @@ main(int argc, char** argv)
 	cout << "Mods sixe: " << models.size() << endl;
 
 	init();
+
+	glfwSetKeyCallback(window, key_callback);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -111,4 +112,21 @@ main(int argc, char** argv)
 	glfwDestroyWindow(window);
 
 	glfwTerminate();
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_W && action == GLFW_REPEAT) {
+		cout << "W pressed" << endl;
+		CurrentModel.Translate(glm::vec3(-1.0f, 0.f, 0.f));
+	}
+
+	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
+		cout << "A pressed" << endl;
+
+	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
+		cout << "S pressed" << endl;
+
+	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
+		cout << "D pressed" << endl;
 }
