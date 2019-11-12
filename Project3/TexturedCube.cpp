@@ -37,6 +37,11 @@ GLuint shader;
 void
 init(void)
 {
+	// bind textures on corresponding texture units
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 
 	ShaderInfo  shaders[] =
 	{
@@ -52,26 +57,30 @@ init(void)
 }
 
 void
-display (Model& _mod)
+display (vector<Model>& _mods)
 {
 
 	//glClearBufferfv(GL_COLOR, 0, black);
 	glClear(GL_COLOR_BUFFER_BIT);
-	// bind textures on corresponding texture units
-	glFrontFace(GL_CW);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
-	_mod.Draw(shader);
+
+	for (int i = 0; i < _mods.size(); i++) {
+		_mods[i].Draw(shader);
+	}
 }
 
 int
 main(int argc, char** argv)
 {
+	vector<Model> models;
 	Model mod;
-	string modelPath;
+	Model mod2;
+	string modelPath = "models/creeper/creeper3.obj";
+	string modelPath2 = "models/creeper/creeper2.obj";
+
 	cout << "enter the relative file path to your model -->  ./";
-	cin >> modelPath;
+	//cin >> modelPath;
 
 	glfwInit();
 
@@ -81,7 +90,11 @@ main(int argc, char** argv)
 	glewInit();
 	
 	FileReader* fileReader = new FileReader();
-	mod = fileReader->ReadFile(modelPath);
+	models.push_back(fileReader->ReadFile(modelPath));
+	models.push_back(fileReader->ReadFile(modelPath2));
+	
+
+	cout << "Mods sixe: " << models.size() << endl;
 
 	init();
 
@@ -90,7 +103,7 @@ main(int argc, char** argv)
 		//uncomment to draw only wireframe 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		display(mod);
+		display(models);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

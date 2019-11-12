@@ -6,6 +6,12 @@ Model FileReader::ReadFile(string _file) {
 	ifstream myFile(file);
 	int indicesOffSet = 0;
 
+	vertexes.clear();
+	indices.clear();
+	vertices.clear();
+	textures.clear();
+	normals.clear();
+
 	Material currentMaterial;
 
 	Model* model = new Model();
@@ -30,7 +36,6 @@ Model FileReader::ReadFile(string _file) {
 
 			// Find new object in file, if current object in memeory create new object, create new object.
 			if (token[0] == "o") {
-				cout << "Object " << token[1] << endl;
 				if (tempObject != nullptr) {
 					model->AddObject(*tempObject);
 				}
@@ -104,19 +109,19 @@ Model FileReader::ReadFile(string _file) {
 
 				//Generate indices based on number of vertices that make up a face
 				if (token.size() - 1 == 4) {
-					indices.push_back(2 + indicesOffSet);
+					indices.push_back(0 + indicesOffSet);
 					indices.push_back(1 + indicesOffSet);
-					indices.push_back(0 + indicesOffSet);
-					indices.push_back(3 + indicesOffSet);
 					indices.push_back(2 + indicesOffSet);
 					indices.push_back(0 + indicesOffSet);
+					indices.push_back(2 + indicesOffSet);
+					indices.push_back(3 + indicesOffSet);
 					indicesOffSet = indicesOffSet + 4;
 					//cout << "IndicesOffset: " << indicesOffSet << endl;
 				}
 				else if (token.size() - 1 == 3) {
-					indices.push_back(2 + indicesOffSet);
-					indices.push_back(1 + indicesOffSet);
 					indices.push_back(0 + indicesOffSet);
+					indices.push_back(1 + indicesOffSet);
+					indices.push_back(2 + indicesOffSet);
 					indicesOffSet = indicesOffSet + 3;
 				}
 			}
@@ -149,8 +154,6 @@ void FileReader::ConstructFolderTree()
 	}
 
 	relFolderTree += "/";
-
-	cout << relFolderTree << endl;
 }
 
 void FileReader::LoadMaterials() {
@@ -176,7 +179,6 @@ void FileReader::LoadMaterials() {
 
 				if (token[0] == "Ns") {
 					materialsMap[curerntMtl].SetSpecularWeight(stof(token[1]));
-					cout << "NS token " << token[1] << endl;
 				}
 
 				if (token[0] == "Ka") {
@@ -209,8 +211,6 @@ void FileReader::LoadMaterials() {
 	{
 		cout << "unable to read material file" << endl;
 	}
-
-	cout << "Matmap size: " << materialsMap.size() << endl;
 }
 
 void FileReader::SplitOnSpace(vector<string>& token, string& stringToSplit)

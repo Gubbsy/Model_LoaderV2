@@ -11,43 +11,44 @@ using namespace std;
 void Mesh::Init(std::vector<Vertex>& _vertexes, std::vector<GLuint>& _indices, Material& _material, string& _folderTree)
 {
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &indicesEBO);
-	glGenBuffers(1, &VBO);
-
 	glBindVertexArray(VAO);
 
 	vertexes = _vertexes;
 	indices = _indices;
 	material = _material;
-
 	folderTree = _folderTree;
 
 	BindVertices();
 	BindIndices();
+	PassToShader();
 	ApplyTexture();
 }
 
-void Mesh::BindVertices() {
-	// Bining All the vertixes that triangles can be made from (VBO)
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(Vertex), &vertexes[0], GL_STATIC_DRAW);
-}
-
-void Mesh::BindIndices() {
-
-	// Binding Contains the combination that from triangles (using the vertexes) [EBO] (for re-using points bassicaly)
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
+void Mesh::PassToShader()
+{
 	// matches to the location on the vertex shader 
 	glVertexAttribPointer(vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(vPosition);
 
 	//glVertexAttribPointer(nPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, normal)));
 	//glEnableVertexAttribArray(nPosition);
-	
+
 	glVertexAttribPointer(tPosition, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, texture)));
 	glEnableVertexAttribArray(tPosition);
+}
+
+void Mesh::BindVertices() {
+	// Bining All the vertixes that triangles can be made from (VBO)
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(Vertex), &vertexes[0], GL_STATIC_DRAW);
+}
+
+void Mesh::BindIndices() {
+	glGenBuffers(1, &indicesEBO);
+	// Binding Contains the combination that from triangles (using the vertexes) [EBO] (for re-using points bassicaly)
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 }
 
 
@@ -72,7 +73,7 @@ void Mesh::ApplyTexture() {
 	
 	//Creates texture data from resource
 	string texturePath = folderTree + material.GetMapD();
-	cout << "This is texture path: " << texturePath << endl;
+	//cout << "This is texture path: " << texturePath << endl;
 	unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{
