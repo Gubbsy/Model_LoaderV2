@@ -28,7 +28,6 @@ enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
 using namespace std;
 
 GLuint shader;
-Model CurrentModel;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
@@ -72,10 +71,8 @@ int
 main(int argc, char** argv)
 {
 	vector<Model> models;
-	Model mod;
-	Model mod2;
-	string modelPath = "models/creeper/creeper3.obj";
-	string modelPath2 = "models/creeper/creeper2.obj";
+	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
+	string modelPath2 = "models/creeper/creeper.obj";
 
 	cout << "enter the relative file path to your model -->  ./";
 	//cin >> modelPath;
@@ -83,7 +80,6 @@ main(int argc, char** argv)
 	glfwInit();
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Cube", NULL, NULL);
-	CurrentModel = mod2;
 
 	glfwMakeContextCurrent(window);
 	glewInit();
@@ -91,6 +87,9 @@ main(int argc, char** argv)
 	FileReader* fileReader = new FileReader();
 	models.push_back(fileReader->ReadFile(modelPath));
 	models.push_back(fileReader->ReadFile(modelPath2));
+
+	Model& currentMod =  models[0];
+	glfwSetWindowUserPointer(window, &currentMod);
 	
 
 	cout << "Mods sixe: " << models.size() << endl;
@@ -116,17 +115,58 @@ main(int argc, char** argv)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_W && action == GLFW_REPEAT) {
+	Model* mod = reinterpret_cast<Model*>(glfwGetWindowUserPointer(window));
+
+	//WASD - Translate
+	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		cout << "W pressed" << endl;
-		CurrentModel.Translate(glm::vec3(-1.0f, 0.f, 0.f));
+		mod->Translate(glm::vec3(0.00f, 0.10f, 0.0f));
 	}
 
-	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
+	if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		cout << "A pressed" << endl;
+		mod->Translate(glm::vec3(0.10f, 0.0f, 0.0f));
+	}
 
-	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
+	if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		cout << "S pressed" << endl;
+		mod->Translate(glm::vec3(0.0f, -0.10f, 0.0f));
+	}
 
-	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
+	if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		cout << "D pressed" << endl;
+		mod->Translate(glm::vec3(-0.10f, 0.0f, 0.0f));
+	}
+
+	//+/- - Scale
+	if (key == GLFW_KEY_KP_ADD && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		cout << "+ pressed" << endl;
+		mod->Scale(glm::vec3(0.3f, 0.3f, 0.3f));
+	}
+
+	if (key == GLFW_KEY_KP_SUBTRACT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		cout << "- pressed" << endl;
+		mod->Scale(glm::vec3(-0.3f, -0.3f, -0.3f));
+	}
+
+	//Arrow keys - Rotate
+	if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		cout << "Right arrow pressed" << endl;
+		mod->Rotate(glm::vec3(0.0f, 10.0f, 0.0f));
+	}
+
+	if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		cout << "Left arrow pressed" << endl;
+		mod->Rotate(glm::vec3(0.0f,-10.0f, 0.0f));
+	}
+
+	if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		cout << "Up arrow pressed" << endl;
+		mod->Rotate(glm::vec3(-10.0f, 0.0f, 0.0f));
+	}
+
+	if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		cout << "Down arrow pressed" << endl;
+		mod->Rotate(glm::vec3(10.0f, 0.0f, 0.0f));
+	}
 }

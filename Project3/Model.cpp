@@ -9,32 +9,32 @@ Model::Model()
 {
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
 	scale = glm::vec3(1, 1, 1);
-	orientation = glm::vec3(-0.35f, 0, 0);
+	orientation = glm::vec3(0.0f, 0, 0);
 
 	modelMat = glm::mat4(1.0f);
-}
-
-void Model::GenerateModelMatrix()
-{
-	//Create Model
-	modelMat = glm::scale(modelMat, scale);
-
-	modelMat = glm::rotate(modelMat, radians(orientation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	modelMat = glm::rotate(modelMat, radians(orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	modelMat = glm::rotate(modelMat, radians(orientation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-	modelMat = glm::translate(modelMat, position);
+	//GenerateModelMatrix();
 }
 
 void Model::Translate(vec3 _translateBy)
 {
 	std::cout << "translat called" << endl;
-	position = position + _translateBy;
+	position = _translateBy;
+	modelMat = glm::translate(modelMat, position);
+}
+
+void Model::Rotate(vec3 _rotateBY)
+{
+	orientation = _rotateBY;
+	modelMat = glm::rotate(modelMat, radians(orientation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	modelMat = glm::rotate(modelMat, radians(orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	modelMat = glm::rotate(modelMat, radians(orientation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 }
 
 void Model::Scale(vec3 _scaleBy)
 {
-	scale = scale + _scaleBy;
+	vec3 newScale = scale +_scaleBy ;
+	modelMat = glm::scale(modelMat, vec3(1.0f));
+	modelMat = glm::scale(modelMat, newScale);
 }
 
 void Model::AddObject(Object object)
@@ -44,8 +44,6 @@ void Model::AddObject(Object object)
 
 void Model::Draw(GLuint& shader)
 {
-	GenerateModelMatrix();
-
 	// creating the view matrix
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));

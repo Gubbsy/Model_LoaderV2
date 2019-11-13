@@ -17,8 +17,8 @@ private:
 
 public:
 	Model();
-	void GenerateModelMatrix();
 	void Translate(vec3 _translateBy);
+	void Rotate(vec3 _rotateBY);
 	void Scale(vec3 _scaleBy);
 	void AddObject(Object object);
 	void Draw(GLuint& shader);
