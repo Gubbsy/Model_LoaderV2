@@ -24,7 +24,6 @@
 // properties -> VC++ Directories -> libraries
 
 // Each attribute matches to a location in the vertex shader (for either postion, colour or texture)
-enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
 using namespace std;
 
 GLuint shader;
@@ -174,9 +173,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		models[currentModelIndex].Rotate(glm::vec3(10.0f, 0.0f, 0.0f));
 	}
 
+	// Tab through models
 	if (key == GLFW_KEY_TAB && (action == GLFW_PRESS || action == GLFW_REPEAT)){
-		cout << "Current Mod Index: " << currentModelIndex << endl;
 		toggleCurrentModel();
-		cout << "New Mod Index" << currentModelIndex << endl;
 	}
 }

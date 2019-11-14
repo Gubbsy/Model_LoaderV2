@@ -8,7 +8,6 @@ class Model
 {
 private:
 	std::vector<Object> objects;
-	std::map<string, Material> materialsMap;
 
 	mat4 modelMat;
 	vec3 position;
