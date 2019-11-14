@@ -26,6 +26,7 @@ private:
 
 	Material material;
 	string folderTree;
+	string texturePath;
 
 	void BindIndices();
 	void BindVertices();

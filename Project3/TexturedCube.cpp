@@ -89,8 +89,6 @@ main(int argc, char** argv)
 	models.push_back(fileReader->ReadFile(modelPath));
 	models.push_back(fileReader->ReadFile(modelPath2));
 
-	//glfwSetWindowUserPointer(window, &models[0]);
-
 	cout << "Mods sixe: " << models.size() << endl;
 
 	init();
@@ -100,7 +98,7 @@ main(int argc, char** argv)
 	while (!glfwWindowShouldClose(window))
 	{
 		//uncomment to draw only wireframe 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		display(models);
 		glfwSwapBuffers(window);
@@ -118,8 +116,6 @@ void toggleCurrentModel() {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	Model* mod = reinterpret_cast<Model*>(glfwGetWindowUserPointer(window));
-
 	//WASD - Translate
 	if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		cout << "W pressed" << endl;

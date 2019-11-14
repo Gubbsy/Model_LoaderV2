@@ -79,7 +79,9 @@ Model FileReader::ReadFile(string _file) {
 					vec3 temp_pos = vec3(0.0f);
 					vec2 temp_tex = vec2(0.0f);
 					vec3 temp_norm = vec3(0.0f);
+					vec4 temp_col = vec4(currentMaterial.GetDiffuseCol(), 0.1f);
 
+					//for every face
 					while (getline(faceIss, faceLine, '/')) {
 
 						//if 0 fetch vertices
@@ -99,7 +101,7 @@ Model FileReader::ReadFile(string _file) {
 					}
 
 					//Add to list of vertexes
-					vertexes.push_back(Vertex(temp_pos, temp_tex, temp_norm));
+					vertexes.push_back(Vertex(temp_pos, temp_tex, temp_norm, temp_col));
 				}
 
 				//Generate indices based on number of vertices that make up a face

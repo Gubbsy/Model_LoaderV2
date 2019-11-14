@@ -30,6 +30,7 @@ public:
 	void SetMapKD(string _mapKD);
 	void SetMapD(string _mapD);
 	
-	string& GetMapD();
+	string GetMapD();
+	vec3 GetDiffuseCol();
 };
 

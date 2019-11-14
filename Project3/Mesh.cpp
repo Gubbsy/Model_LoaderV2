@@ -35,6 +35,9 @@ void Mesh::PassToShader()
 
 	glVertexAttribPointer(tPosition, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, texture)));
 	glEnableVertexAttribArray(tPosition);
+
+	glVertexAttribPointer(cPosition, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, colour)));
+	glEnableVertexAttribArray(cPosition);
 }
 
 void Mesh::BindVertices() {
@@ -72,8 +75,14 @@ void Mesh::ApplyTexture() {
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis (it's loaded upside down).
 	
 	//Creates texture data from resource
-	string texturePath = folderTree + material.GetMapD();
-	//cout << "This is texture path: " << texturePath << endl;
+	if (material.GetMapD() != "") {
+		texturePath = folderTree + material.GetMapD();
+	}
+	else {
+		texturePath = "./media/textures/DefaultWhite.png";
+	}
+
+
 	unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{
