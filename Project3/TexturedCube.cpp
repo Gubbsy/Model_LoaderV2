@@ -23,12 +23,27 @@ using namespace std;
 GLuint shader;
 uint currentModelIndex;
 vector<Model> models;
+vector<string> modelPaths;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+void takeUserInput() {
+	string userInput;
+
+	cout << "Enter the relative file path to your model. \n For multiple paths seperate each file with a pipe | \n -->";
+	getline(std::cin, userInput);
+
+	istringstream iss(userInput);
+
+	for (string s; iss >> s; ) {
+		modelPaths.push_back(s);
+	}
+}
 
 void
 init(void)
 {
+	currentModelIndex = 0;
 	// bind textures on corresponding texture units
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
@@ -65,9 +80,8 @@ display (vector<Model>& _mods)
 int
 main(int argc, char** argv)
 {
-	currentModelIndex = 0;
 	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
-	string modelPath2 = "models/creeper/creeper.oj";
+	string modelPath2 = "models/creeper/creeper.obj";
 
 	glfwInit();
 
@@ -76,14 +90,14 @@ main(int argc, char** argv)
 	glfwMakeContextCurrent(window);
 	glewInit();
 	
-	cout << "enter the relative file path to your model -->  ./";
-	//cin >> modelPath;
+	takeUserInput();
 
 	FileReader* fileReader = new FileReader();
-	models.push_back(fileReader->ReadFile(modelPath));
-	models.push_back(fileReader->ReadFile(modelPath2));
 
-	cout << "Mods sixe: " << models.size() << endl;
+	for (int i = 0; i < modelPaths.size(); i++)
+	{
+		models.push_back(fileReader->ReadFile(modelPaths[i]));
+	}
 
 	init();
 
