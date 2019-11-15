@@ -4,6 +4,7 @@
 layout( location = 0 ) in vec3 vPosition;
 layout( location = 1 ) in vec4 vColour;
 layout (location = 2) in vec2 aTexCoord;
+layout (location = 3) in vec2 vNormal;
 uniform mat4 mvp;
 
 out vec4 fragColour;

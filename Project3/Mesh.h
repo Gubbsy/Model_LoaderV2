@@ -12,7 +12,7 @@
 class Mesh
 {
 private:
-	enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2 };
+	enum Attrib_IDs { vPosition = 0, cPosition = 1, tPosition = 2, nPosition = 3 };
 
 	GLuint texture1;
 	GLuint shader;

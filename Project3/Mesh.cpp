@@ -30,14 +30,14 @@ void Mesh::PassToShader()
 	glVertexAttribPointer(vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(vPosition);
 
-	//glVertexAttribPointer(nPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, normal)));
-	//glEnableVertexAttribArray(nPosition);
-
 	glVertexAttribPointer(tPosition, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, texture)));
 	glEnableVertexAttribArray(tPosition);
 
 	glVertexAttribPointer(cPosition, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, colour)));
 	glEnableVertexAttribArray(cPosition);
+
+	glVertexAttribPointer(nPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(offsetof(Vertex, normal)));
+	glEnableVertexAttribArray(nPosition);
 }
 
 void Mesh::BindVertices() {

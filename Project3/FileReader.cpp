@@ -127,6 +127,8 @@ Model FileReader::ReadFile(string _file) {
 		tempObject->AddMesh(*tempMesh);
 		model->AddObject(*tempObject);
 		
+		delete(tempMesh);
+		delete(tempObject);
 		return *model;
 	}
 	else {
