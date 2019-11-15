@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////////
-//
-//  Triangles.cpp
-//
-//////////////////////////////////////////////////////////////////////////////
-
 #include "GL/glew.h"
 #include "GL/freeglut.h"
 #include "GLFW/glfw3.h"
@@ -73,7 +67,7 @@ main(int argc, char** argv)
 {
 	currentModelIndex = 0;
 	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
-	string modelPath2 = "models/creeper/creeper.obj";
+	string modelPath2 = "models/creeper/creeper.oj";
 
 	glfwInit();
 

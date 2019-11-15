@@ -1,3 +1,5 @@
+//OBJ file reader
+
 #include "Model.h"
 #include <glm\ext\matrix_transform.hpp>
 #include <GLFW\glfw3.h>
