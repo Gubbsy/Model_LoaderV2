@@ -37,7 +37,7 @@ private:
 	map<string, Material> materialsMap;
 
 public:
-	Model ReadFile(string _file);
+	Model* ReadFile(string _file);
 	void ResetReader();
 	void ConstructFolderTree();
 	void LoadMaterials();

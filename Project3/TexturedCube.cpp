@@ -66,11 +66,9 @@ init(void)
 void
 display (vector<Model>& _mods)
 {
-
 	//glClearBufferfv(GL_COLOR, 0, black);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-
 
 	for (int i = 0; i < _mods.size(); i++) {
 		_mods[i].Draw(shader);
@@ -96,7 +94,10 @@ main(int argc, char** argv)
 
 	for (int i = 0; i < modelPaths.size(); i++)
 	{
-		models.push_back(fileReader->ReadFile(modelPaths[i]));
+		Model* mod = fileReader->ReadFile(modelPaths[i]);
+		if (mod != nullptr) {
+			models.push_back(*mod);
+		}
 	}
 
 	init();

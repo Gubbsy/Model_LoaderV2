@@ -1,6 +1,6 @@
 #include "FileReader.h"
 
-Model FileReader::ReadFile(string _file) {
+Model* FileReader::ReadFile(string _file) {
 	
 	Model* model = new Model();
 	Object* tempObject = nullptr;
@@ -139,7 +139,7 @@ Model FileReader::ReadFile(string _file) {
 		model = nullptr;
 	}
 
-	return *model;
+	return model;
 }
 
 void FileReader::ResetReader()
