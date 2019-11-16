@@ -133,10 +133,14 @@ Model* FileReader::ReadFile(string _file) {
 			delete(tempMesh);
 			delete(tempObject);
 		}
+		else 
+		{
+			cout << "Unable to read obj file: " << file << endl;
+			model = nullptr;
+		}
 	}
 	catch (...) {
-		cerr << "Unable to read obj file" << endl;
-		model = nullptr;
+		cerr << "Unable to read obj file: " << file << endl;
 	}
 
 	return model;

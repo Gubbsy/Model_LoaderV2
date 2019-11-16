@@ -30,7 +30,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void takeUserInput() {
 	string userInput;
 
-	cout << "Enter the relative file path to your model. \n For multiple paths seperate each file with a pipe | \n -->";
+	cout << "Enter the relative file path to your model. \n For multiple paths seperate each file with a whitespace  \n -->";
 	getline(std::cin, userInput);
 
 	istringstream iss(userInput);
