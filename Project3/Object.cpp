@@ -12,3 +12,10 @@ void Object::Draw(GLuint& shader)
 		meshes[i].Draw(shader);
 	}
 }
+
+void Object::Delete()
+{
+	for (int i = 0; i < meshes.size(); i++) {
+		meshes[i].Delete();
+	}
+}

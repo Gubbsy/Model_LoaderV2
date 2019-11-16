@@ -108,5 +108,12 @@ void Mesh::Draw(GLuint& shaderProgram) {
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
 
+void Mesh::Delete()
+{
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &indicesEBO);
+	glDeleteVertexArrays(1, &VAO);
+}
+
 
 

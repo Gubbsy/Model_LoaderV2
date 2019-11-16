@@ -21,5 +21,6 @@ public:
 	void Scale(vec3 _scaleBy);
 	void AddObject(Object object);
 	void Draw(GLuint& shader);
+	void Delete();
 };
 

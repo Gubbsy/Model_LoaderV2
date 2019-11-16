@@ -10,5 +10,6 @@ private:
 public:
 	void AddMesh(Mesh& _mesh);
 	void Draw(GLuint& shader);
+	void Delete();
 };
 

@@ -65,3 +65,11 @@ void Model::Draw(GLuint& shader)
 		objects[i].Draw(shader);
 	}
 }
+
+void Model::Delete()
+{
+	for (int i = 0; i < objects.size(); i++) {
+		objects[i].Delete();
+		//delete(objects[i]);
+	}
+}
