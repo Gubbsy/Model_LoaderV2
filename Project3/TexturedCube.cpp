@@ -45,9 +45,9 @@ init(void)
 {
 	currentModelIndex = 0;
 	// bind textures on corresponding texture units
-	glFrontFace(GL_CCW);
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
+	//glFrontFace(GL_CCW);
+	//glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
 	ShaderInfo  shaders[] =

@@ -135,12 +135,12 @@ Model* FileReader::ReadFile(string _file) {
 		}
 		else 
 		{
-			cout << "Unable to read obj file: " << file << endl;
+			cout << "Unable to open obj file: " << file << endl;
 			model = nullptr;
 		}
 	}
 	catch (...) {
-		cerr << "Unable to read obj file: " << file << endl;
+		cerr << "Unable to read obj file: " << file << ". The file you entered may be corrupted" << endl;
 	}
 
 	return model;
