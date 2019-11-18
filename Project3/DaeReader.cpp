@@ -49,7 +49,7 @@ Model* DaeReader::ReadFile(string _file)
 
 	fileStringCpy = fileString;
 
-	regex triInputReg("<input semantic=\"([\\s\\S]+?)\"[\\s\\S]*?source=\"#?([\\s\\S]*?)\"[\\s\\S]*?offset=\"([\\s\\S]*?)\"");
+	regex triInputReg("<input (?=.*semantic=\"([\\s\\S]+?)\")[\\s\\S]*?(?=.*source=\"#?([\\s\\S]*?)\")[\\s\\S]*?(?=.*offset=\"([\\s\\S]*?)\")");
 
 	while (regex_search(fileStringCpy, matchResult, triInputReg)) {
 		
@@ -61,7 +61,8 @@ Model* DaeReader::ReadFile(string _file)
 		string sourceID = matchResult[2];
 		GLint offSet = stoi(matchResult[3]);
 		
-		inputs.push_back(Input(semantic, sourceID, offSet, sources[sourceID]));
+		if(semantic != "VERTEX")
+			inputs.push_back(Input(semantic, sourceID, offSet, sources[sourceID]));
 
 		fileStringCpy = matchResult.suffix();
 	}
@@ -82,5 +83,55 @@ Model* DaeReader::ReadFile(string _file)
 		fileStringCpy = matchResult.suffix();
 	}
 
+	//Step through indices with stide of input lenght
+	for (int i = 0; i < vertexDefs.size(); i = i + inputs.size()) {
+		//Set-up temp data stores to create vertex
+		glm::vec3 vert = glm::vec3();
+		glm::vec4 col = glm::vec4();
+		glm::vec2 tex = glm::vec2();
+		glm::vec3 norm = glm::vec3();
+
+		// for the number of inputs that build a vertex
+		for (size_t j = 0; j < inputs.size(); j++)
+		{
+			//set current index
+			int curIndex = vertexDefs[i + j];
+			
+			//if POSITION input, add to temp vertex store
+			if (inputs[j].semantic == "POSITION") {
+				vert.x = inputs[j].data[curIndex * 3];
+				vert.y = inputs[j].data[curIndex * 3 + 1];
+				vert.z = inputs[j].data[curIndex * 3 + 2];
+			}
+
+			//if NORMAL input, add normals
+			if (inputs[j].semantic == "NORMAL") {
+				norm.x = inputs[j].data[curIndex * 3];
+				norm.y = inputs[j].data[curIndex * 3 + 1]; //index offset
+				norm.z = inputs[j].data[curIndex * 3 + 2];
+			}
+
+			//if TEXTCOORD input, add normals
+			if (inputs[j].semantic == "TEXCOORD") {
+				tex.s = inputs[j].data[curIndex * 2];
+				tex.t = inputs[j].data[curIndex * 2 + 1];
+			}
+
+			//if COLOR input, add normals
+			if (inputs[j].semantic == "COLOR") {
+				col.r = inputs[j].data[curIndex * 4];
+				col.g = inputs[j].data[curIndex * 4 + 1];
+				col.b = inputs[j].data[curIndex * 4 + 2];
+				col.a = inputs[j].data[curIndex * 4 + 3];
+			}
+		}
+
+		vertices.push_back(Vertex(vert, tex, norm, col));
+	}
+
+	for (int i = 0; i < vertexDefs.size(); i++) {
+		indices.push_back(i);
+	}
+	
  	return model;
 }

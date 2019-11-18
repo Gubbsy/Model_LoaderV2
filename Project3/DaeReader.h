@@ -14,6 +14,9 @@ private:
 	std::vector<GLuint> vertexDefs;
 	std::vector<Input> inputs;
 
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+
 
 public:
 	Model* ReadFile(string _file);

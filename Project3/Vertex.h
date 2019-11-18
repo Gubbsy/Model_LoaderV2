@@ -11,9 +11,9 @@ struct Vertex
 	glm::vec3 normal;
 	glm::vec4 colour;
 
-	Vertex(glm::vec3 _position, glm::vec2 _tecture, glm::vec3 _noraml, glm::vec4 _colour) {
+	Vertex(glm::vec3 _position, glm::vec2 _texture, glm::vec3 _noraml, glm::vec4 _colour) {
 		this->postion = _position;
-		this->texture = _tecture;
+		this->texture = _texture;
 		this->normal = _noraml;
 		this->colour = _colour;
 	}

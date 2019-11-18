@@ -82,6 +82,7 @@ main(int argc, char** argv)
 	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
 	string modelPath2 = "models/creeper/creeper.obj";
 
+	//string daeModelPath = "models/low_poly_boat-dae/low_poly_boat.dae";
 	string daeModelPath = "models/creeper-dae/creeper.dae";
 
 	glfwInit();
