@@ -72,12 +72,11 @@ Model* DaeReader::ReadFile(string _file)
 
 	while (regex_search(fileStringCpy, matchResult, triIndicesReg)) {
 
-		cout << "Match Results 1: " << matchResult[1] << endl;
 		string triIndices = matchResult[1];
 
 		istringstream iss(triIndices);
 		for (string s; iss >> s; ) {
-			vertexDefs.push_back(stof(s));
+			vertexDefs.push_back(stoi(s));
 		}
 
 		fileStringCpy = matchResult.suffix();
