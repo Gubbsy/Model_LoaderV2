@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DaeReader.cpp" />
     <ClCompile Include="ObjReader.cpp" />
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -163,6 +164,8 @@
     <ClCompile Include="TexturedCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DaeReader.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="ObjReader.h" />
     <ClInclude Include="LoadShaders.h" />
     <ClInclude Include="Material.h" />

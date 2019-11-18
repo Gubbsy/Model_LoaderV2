@@ -39,6 +39,12 @@
     <ClInclude Include="ObjReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DaeReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="media\triangles.frag">
@@ -69,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ObjReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DaeReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

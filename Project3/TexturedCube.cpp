@@ -12,6 +12,7 @@
 #include <vector>
 #include "Mesh.h"
 #include "ObjReader.h"
+#include "DaeReader.h"
 #include "Model.h"
 
 // to use this example you will need to download the header files for GLM put them into a folder which you will reference in
@@ -81,16 +82,16 @@ main(int argc, char** argv)
 	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
 	string modelPath2 = "models/creeper/creeper.obj";
 
+	string daeModelPath = "models/creeper-dae/creeper.dae";
+
 	glfwInit();
-
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Cube", NULL, NULL);
-
 	glfwMakeContextCurrent(window);
 	glewInit();
 	
-	takeUserInput();
+	//takeUserInput();
 
-	ObjReader* fileReader = new ObjReader();
+	/*ObjReader* fileReader = new ObjReader();
 
 	for (int i = 0; i < modelPaths.size(); i++)
 	{
@@ -98,7 +99,11 @@ main(int argc, char** argv)
 		if (mod != nullptr) {
 			models.push_back(*mod);
 		}
-	}
+	}*/
+
+	DaeReader* fileReader = new DaeReader();
+
+	Model* mod = fileReader->ReadFile(daeModelPath);
 
 	init();
 
