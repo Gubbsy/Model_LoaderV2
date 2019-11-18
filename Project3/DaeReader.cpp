@@ -21,11 +21,13 @@ Model* DaeReader::ReadFile(string _file)
 		}
 	}
 
+	string fileStringCpy = fileString;
+
 	// Matches sources and adds to map<sourceID, sourceValue>
 	regex sourceReg("<source.+id=\"([\\s\\S]+?)\"[\\s\\S]*?>[\\s\\S]*?<float_array[\\s\\S]*?>([\\s\\S]+?)<\/float_array>");
 	smatch matchResult;
 
-	while (regex_search(fileString, matchResult, sourceReg)) {
+	while (regex_search(fileStringCpy, matchResult, sourceReg)) {
 
 		vector<GLfloat> values;
 
@@ -42,16 +44,18 @@ Model* DaeReader::ReadFile(string _file)
 
 		sources[id] = values;
 
-		fileString = matchResult.suffix();
+		fileStringCpy = matchResult.suffix();
 	}
 
-	regex triIndicesReg("<input semantic=\"([\\s\\S]+?)\"[\\s\\S]*?source=\"#?([\\s\\S]*?)\"[\\s\\S]*?offset=\"([\\s\\S]*?)\"");
+	fileStringCpy = fileString;
 
-	while (regex_search(fileString, matchResult, triIndicesReg)) {
+	regex triInputReg("<input semantic=\"([\\s\\S]+?)\"[\\s\\S]*?source=\"#?([\\s\\S]*?)\"[\\s\\S]*?offset=\"([\\s\\S]*?)\"");
+
+	while (regex_search(fileStringCpy, matchResult, triInputReg)) {
 		
-		cout << "Match Results 1: " << matchResult[1] << endl;
-		cout << "Match Results 2: " << matchResult[2] << endl;
-		cout << "Match Results 3: " << matchResult[3] << endl;
+		//cout << "Match Results 1: " << matchResult[1] << endl;
+		//cout << "Match Results 2: " << matchResult[2] << endl;
+		//cout << "Match Results 3: " << matchResult[3] << endl;
 
 		string semantic = matchResult[1];
 		string sourceID = matchResult[2];
@@ -59,9 +63,25 @@ Model* DaeReader::ReadFile(string _file)
 		
 		inputs.push_back(Input(semantic, sourceID, offSet, sources[sourceID]));
 
-		fileString = matchResult.suffix();
+		fileStringCpy = matchResult.suffix();
 	}
 
+	fileStringCpy = fileString;
 
-	return model;
+	regex triIndicesReg("<triangles material=[\\s\\S]*?<p>([\\s\\S]+?)<\/p>");
+
+	while (regex_search(fileStringCpy, matchResult, triIndicesReg)) {
+
+		cout << "Match Results 1: " << matchResult[1] << endl;
+		string triIndices = matchResult[1];
+
+		istringstream iss(triIndices);
+		for (string s; iss >> s; ) {
+			vertexDefs.push_back(stof(s));
+		}
+
+		fileStringCpy = matchResult.suffix();
+	}
+
+ 	return model;
 }

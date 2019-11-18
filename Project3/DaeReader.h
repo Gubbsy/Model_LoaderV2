@@ -11,7 +11,9 @@ class DaeReader
 private:
 	std::map<std::string, std::vector<GLfloat>> sources;
 	std::string fileString;
+	std::vector<GLuint> vertexDefs;
 	std::vector<Input> inputs;
+
 
 public:
 	Model* ReadFile(string _file);
