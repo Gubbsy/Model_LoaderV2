@@ -1,6 +1,6 @@
 #include "Mesh.h"
 #include "stb_image.h"
-#include "FileReader.h"
+#include "ObjReader.h"
 
 #include <iostream>
 

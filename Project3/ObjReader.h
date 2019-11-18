@@ -18,7 +18,7 @@
 using namespace std;
 using namespace glm;
 
-class FileReader
+class ObjReader
 {
 private:
 

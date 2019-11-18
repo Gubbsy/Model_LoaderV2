@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 #include "Mesh.h"
-#include "FileReader.h"
+#include "ObjReader.h"
 #include "Model.h"
 
 // to use this example you will need to download the header files for GLM put them into a folder which you will reference in
@@ -90,7 +90,7 @@ main(int argc, char** argv)
 	
 	takeUserInput();
 
-	FileReader* fileReader = new FileReader();
+	ObjReader* fileReader = new ObjReader();
 
 	for (int i = 0; i < modelPaths.size(); i++)
 	{

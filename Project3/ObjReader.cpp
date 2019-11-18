@@ -1,6 +1,6 @@
-#include "FileReader.h"
+#include "ObjReader.h"
 
-Model* FileReader::ReadFile(string _file) {
+Model* ObjReader::ReadFile(string _file) {
 	
 	Model* model = new Model();
 	Object* tempObject = nullptr;
@@ -146,7 +146,7 @@ Model* FileReader::ReadFile(string _file) {
 	return model;
 }
 
-void FileReader::ResetReader()
+void ObjReader::ResetReader()
 {
 	vertexes.clear();
 	indices.clear();
@@ -159,7 +159,7 @@ void FileReader::ResetReader()
 	relFolderTree = "";
 }
 
-void FileReader::ConstructFolderTree()
+void ObjReader::ConstructFolderTree()
 {
 	relFolderTree = ".";
 	std::stringstream ss(file);
@@ -178,7 +178,7 @@ void FileReader::ConstructFolderTree()
 	relFolderTree += "/";
 }
 
-void FileReader::LoadMaterials() {
+void ObjReader::LoadMaterials() {
 	string curerntMtl = "";
 
 	string line = "";
@@ -235,7 +235,7 @@ void FileReader::LoadMaterials() {
 	}
 }
 
-void FileReader::SplitOnSpace(vector<string>& token, string& stringToSplit)
+void ObjReader::SplitOnSpace(vector<string>& token, string& stringToSplit)
 {
 	istringstream iss(stringToSplit);
 
