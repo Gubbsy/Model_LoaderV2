@@ -20,5 +20,10 @@ private:
 
 public:
 	Model* ReadFile(string _file);
+	void PullSource(string _fileString);
+	void PullInputs(string _fileString);
+	void PullVertextDef(string _flleString);
+	void GenerateVertices();
+	void GenerateIndices();
 };
 
