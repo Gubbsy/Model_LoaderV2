@@ -8,8 +8,8 @@ using namespace std;
 Model* DaeReader::ReadFile(string _file)
 {	
 	Model* model = new Model();
-	Object* tempObject = nullptr;
-	Mesh* tempMesh = nullptr;
+	Object* tempObject = new Object;
+	Mesh* tempMesh = new Mesh();
 
 	std::string file = _file;
 	string line = "";
@@ -31,9 +31,6 @@ Model* DaeReader::ReadFile(string _file)
 
 		vector<GLfloat> values;
 
-		//cout << "Match Results 1: " << matchResult[1] << endl;
-		//cout << "Match Results 2: " << matchResult[2] << endl;
-
 		string id = matchResult[1];
 		string valuesString = matchResult[2];
 
@@ -52,10 +49,6 @@ Model* DaeReader::ReadFile(string _file)
 	regex triInputReg("<input (?=.*semantic=\"([\\s\\S]+?)\")[\\s\\S]*?(?=.*source=\"#?([\\s\\S]*?)\")[\\s\\S]*?(?=.*offset=\"([\\s\\S]*?)\")");
 
 	while (regex_search(fileStringCpy, matchResult, triInputReg)) {
-		
-		//cout << "Match Results 1: " << matchResult[1] << endl;
-		//cout << "Match Results 2: " << matchResult[2] << endl;
-		//cout << "Match Results 3: " << matchResult[3] << endl;
 
 		string semantic = matchResult[1];
 		string sourceID = matchResult[2];
@@ -69,7 +62,7 @@ Model* DaeReader::ReadFile(string _file)
 
 	fileStringCpy = fileString;
 
-	regex triIndicesReg("<triangles material=[\\s\\S]*?<p>([\\s\\S]+?)<\/p>");
+	regex triIndicesReg("<triangles [\\s\\S]*?<p>([\\s\\S]+?)<\/p>");
 
 	while (regex_search(fileStringCpy, matchResult, triIndicesReg)) {
 
@@ -132,6 +125,16 @@ Model* DaeReader::ReadFile(string _file)
 	for (int i = 0; i < vertexDefs.size(); i++) {
 		indices.push_back(i);
 	}
+
+	//TODO: Read In material
+	Material newMaterial = Material();
+
+	// Read in folder tree from material;
+	string relFolderTree = "";
+
+	tempMesh->Init(vertices, indices, newMaterial, relFolderTree);
+	tempObject->AddMesh(*tempMesh);
+	model->AddObject(*tempObject);
 	
  	return model;
 }

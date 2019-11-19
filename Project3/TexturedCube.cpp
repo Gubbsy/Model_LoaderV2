@@ -82,8 +82,8 @@ main(int argc, char** argv)
 	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
 	string modelPath2 = "models/creeper/creeper.obj";
 
-	//string daeModelPath = "models/low_poly_boat-dae/low_poly_boat.dae";
-	string daeModelPath = "models/creeper-dae/creeper.dae";
+	string daeModelPath = "models/low_poly_boat-dae/low_poly_boat.dae";
+	//string daeModelPath = "models/creeper-dae/creeper.dae";
 
 	glfwInit();
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Cube", NULL, NULL);
@@ -105,6 +105,7 @@ main(int argc, char** argv)
 	DaeReader* fileReader = new DaeReader();
 
 	Model* mod = fileReader->ReadFile(daeModelPath);
+	models.push_back(*mod);
 
 	init();
 
