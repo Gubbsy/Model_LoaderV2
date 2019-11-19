@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "stb_image.h"
 #include "ObjReader.h"
+#include <filesystem>
 
 #include <iostream>
 
@@ -74,14 +75,12 @@ void Mesh::ApplyTexture() {
 	GLint width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis (it's loaded upside down).
 	
+	texturePath = folderTree + material.GetMapD();
+	
 	//Creates texture data from resource
-	if (material.GetMapD() != "") {
-		texturePath = folderTree + material.GetMapD();
-	}
-	else {
+	if (!exists(texturePath)) {
 		texturePath = "./media/textures/DefaultWhite.png";
 	}
-
 
 	unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 	if (data)
@@ -113,6 +112,12 @@ void Mesh::Delete()
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &indicesEBO);
 	glDeleteVertexArrays(1, &VAO);
+}
+
+bool Mesh::exists(const std::string& name)
+{
+	ifstream f(name.c_str());
+	return f.good();
 }
 
 

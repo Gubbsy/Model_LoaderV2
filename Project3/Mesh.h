@@ -25,8 +25,8 @@ private:
 	GLuint indicesEBO;
 
 	Material material;
-	string folderTree;
-	string texturePath;
+	std::string folderTree;
+	std::string texturePath;
 
 	void BindIndices();
 	void BindVertices();
@@ -37,5 +37,6 @@ public:
 	void PassToShader();
 	void Draw(GLuint& shaderProgram);
 	void Delete();
+	bool exists(const std::string& name);
 };
 

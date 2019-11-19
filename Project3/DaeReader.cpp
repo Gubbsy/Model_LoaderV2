@@ -7,11 +7,15 @@ using namespace std;
 
 Model* DaeReader::ReadFile(string _file)
 {	
+	ResetReader();
+
 	Model* model = new Model();
 	Object* tempObject = new Object;
 	Mesh* tempMesh = new Mesh();
+	newMaterial = Material();
 
-	std::string file = _file;
+	file = _file;
+	texFile = "";
 	string line = "";
 	ifstream myFile(file);
 
@@ -24,21 +28,27 @@ Model* DaeReader::ReadFile(string _file)
 	PullSource(fileString);
 	PullInputs(fileString);
 	PullVertextDef(fileString);
+	PullTexture(fileString);
+	ConstructFolderTree();
 	GenerateVertices();
 	GenerateIndices();
 	
-
-	//TODO: Read In material
-	Material newMaterial = Material();
-
-	// Read in folder tree from material;
-	string relFolderTree = "";
-
+	newMaterial.SetMapD(texFile);
 	tempMesh->Init(vertices, indices, newMaterial, relFolderTree);
 	tempObject->AddMesh(*tempMesh);
 	model->AddObject(*tempObject);
 	
  	return model;
+}
+
+void DaeReader::ResetReader()
+{
+	sources = map<std::string, std::vector<GLfloat>>();
+	fileString = "";
+	vertexDefs = vector<GLuint>();
+	inputs = vector<Input>();
+	vertices = vector<Vertex>();
+	indices = vector<GLuint>();
 }
 
 void DaeReader::PullSource(string _fileString)
@@ -83,12 +93,12 @@ void DaeReader::PullInputs(string _fileString)
 	}
 }
 
-void DaeReader::PullVertextDef(string _flleString)
+void DaeReader::PullVertextDef(string _fileString)
 {
 	regex triIndicesReg("<triangles [\\s\\S]*?<p>([\\s\\S]+?)<\/p>");
 	smatch matchResult;
 
-	while (regex_search(_flleString, matchResult, triIndicesReg)) {
+	while (regex_search(_fileString, matchResult, triIndicesReg)) {
 
 		string triIndices = matchResult[1];
 
@@ -97,10 +107,23 @@ void DaeReader::PullVertextDef(string _flleString)
 			vertexDefs.push_back(stoi(s));
 		}
 
-		_flleString = matchResult.suffix();
+		_fileString = matchResult.suffix();
 	}
-
 }
+
+void DaeReader::PullTexture(string _fileString)
+{
+	regex triIndicesReg("<image id=[\\s\\S]*?<init_from>([\\s\\S]+?)<\/init_from>");
+	smatch matchResult;
+
+	while (regex_search(_fileString, matchResult, triIndicesReg)) {
+
+		texFile = matchResult[1];
+
+		_fileString = matchResult.suffix();
+	}
+}
+
 
 void DaeReader::GenerateVertices()
 {
@@ -108,7 +131,7 @@ void DaeReader::GenerateVertices()
 	for (int i = 0; i < vertexDefs.size(); i = i + inputs.size()) {
 		//Set-up temp data stores to create vertex
 		glm::vec3 vert = glm::vec3();
-		glm::vec4 col = glm::vec4();
+		glm::vec4 col = glm::vec4(1.0f);
 		glm::vec2 tex = glm::vec2();
 		glm::vec3 norm = glm::vec3();
 
@@ -157,3 +180,23 @@ void DaeReader::GenerateIndices()
 		indices.push_back(i);
 	}
 }
+
+void DaeReader::ConstructFolderTree()
+{
+	relFolderTree = ".";
+	std::stringstream ss(file);
+	std::string folder;
+	std::vector<std::string> components;
+
+	while (std::getline(ss, folder, '/'))
+	{
+		components.push_back(folder);
+	}
+
+	for (int i = 0; i < components.size() - 1; i++) {
+		relFolderTree = relFolderTree + "/" + components[i];
+	}
+
+	relFolderTree += "/";
+}
+

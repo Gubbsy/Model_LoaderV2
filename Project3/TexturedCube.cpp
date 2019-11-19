@@ -90,22 +90,30 @@ main(int argc, char** argv)
 	glfwMakeContextCurrent(window);
 	glewInit();
 	
-	//takeUserInput();
+	takeUserInput();
 
-	/*ObjReader* fileReader = new ObjReader();
+	ObjReader* objReader = new ObjReader();
+	DaeReader* daeReader = new DaeReader();
 
 	for (int i = 0; i < modelPaths.size(); i++)
 	{
-		Model* mod = fileReader->ReadFile(modelPaths[i]);
+		Model* mod = nullptr;
+
+		string extension = modelPaths[i].substr((modelPaths[i].length()) - 3);
+		if (extension == "obj") {
+			mod = objReader->ReadFile(modelPaths[i]);
+		}
+		else if (extension == "dae") {
+			mod = daeReader->ReadFile(modelPaths[i]);
+		}
+		else {
+			cout << "Unsupported file type: " << extension << endl;
+		}
+		
 		if (mod != nullptr) {
 			models.push_back(*mod);
 		}
-	}*/
-
-	DaeReader* fileReader = new DaeReader();
-
-	Model* mod = fileReader->ReadFile(daeModelPath);
-	models.push_back(*mod);
+	}
 
 	init();
 
