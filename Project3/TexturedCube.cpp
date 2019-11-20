@@ -33,8 +33,9 @@ void takeUserInput() {
 
 	//Get user Input 
 	string userInput;
-	cout << "Enter the relative file path to your model. \n For multiple paths seperate each file with a whitespace  \n -->";
+	cout << "Welcome! Please enter the relative file path to your model. \n\nCONTROLS: \nW ~ Move model up \nA ~ Move model left \nS ~ Move model down \nD ~ Move model right \n\nUp Arrow ~ Rotate \nLeft Arrow ~ Rotate \nDown Arrow ~ Rotate \nLeft Arrow ~ Rotate \n \nNUM PAD + ~ Scale up \nNUM PAD - ~ Scale down \n\nTAB ~ Toggle currently selected model. \nBACKSPACE ~ Delete currently selected model \nESC ~ Close program \n\nFor multiple paths seperate each file with a whitespace \n -->";
 	getline(std::cin, userInput);
+
 
 	//Split user input on whiet space to get file paths and add them to vector of files paths.
 	istringstream iss(userInput);
@@ -208,7 +209,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 	//close program
-	else if (key == GLFW_KEY_ESCAPE && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+	if (key == GLFW_KEY_ESCAPE && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
 		exit(0);
 	}
 }

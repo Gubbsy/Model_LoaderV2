@@ -13,12 +13,12 @@ To install the required dependencies and packages within Visual Studio, right cl
 - To render multiple objects within the scene one must enter each relative file path separated by a white space.  
 ( i.e. -> *models/creeper/creeper.obj  models/low_poly_boat/low_poly_boat.dae* )
 - If a model fails to load the terminal will inform you of such.
-- Please be aware that large models may take a considerable period of time to load.
+- Please be aware that large models may take a considerable period of time to load and multiple instances of the same model will load on top of one another and will need to be scaled and/or translated to become visible.
 - To load a new set of files the application must be restarted.
 
 ## Controls
 TAB ~ Toggle currently selected model.  
-BACKSPACE ~ Delete currently selected model.
+BACKSPACE ~ Delete currently selected model.  
 ESC ~ Close program.
 
 #### Model Movement
