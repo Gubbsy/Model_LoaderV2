@@ -28,14 +28,16 @@ vector<string> modelPaths;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+//Take User Input
 void takeUserInput() {
-	string userInput;
 
+	//Get user Input 
+	string userInput;
 	cout << "Enter the relative file path to your model. \n For multiple paths seperate each file with a whitespace  \n -->";
 	getline(std::cin, userInput);
 
+	//Split user input on whiet space to get file paths and add them to vector of files paths.
 	istringstream iss(userInput);
-
 	for (string s; iss >> s; ) {
 		modelPaths.push_back(s);
 	}
@@ -51,6 +53,7 @@ init(void)
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
+	//Assign shaders
 	ShaderInfo  shaders[] =
 	{
 		{ GL_VERTEX_SHADER, "media/triangles.vert" },
@@ -71,6 +74,7 @@ display (vector<Model>& _mods)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	//For every model in the scene call thier draw method
 	for (int i = 0; i < _mods.size(); i++) {
 		_mods[i].Draw(shader);
 	}
@@ -79,27 +83,28 @@ display (vector<Model>& _mods)
 int
 main(int argc, char** argv)
 {
-	string modelPath = "models/low_poly_boat/low_poly_boat.obj";
-	string modelPath2 = "models/creeper/creeper.obj";
-
-	string daeModelPath = "models/low_poly_boat-dae/low_poly_boat.dae";
-	//string daeModelPath = "models/creeper-dae/creeper.dae";
-
+	//GLEW and GLFW Initialisation
 	glfwInit();
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Textured Cube", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glewInit();
 	
+	//Call take user input
 	takeUserInput();
 
+	//Create Readers
 	ObjReader* objReader = new ObjReader();
 	DaeReader* daeReader = new DaeReader();
 
+	// For every model file path
 	for (int i = 0; i < modelPaths.size(); i++)
 	{
+		//Intialise empty model
 		Model* mod = nullptr;
-
+		//Get File extension
 		string extension = modelPaths[i].substr((modelPaths[i].length()) - 3);
+
+		//Pass in file path to apprpriate reader
 		if (extension == "obj") {
 			mod = objReader->ReadFile(modelPaths[i]);
 		}
@@ -110,15 +115,17 @@ main(int argc, char** argv)
 			cout << "Unsupported file type: " << extension << endl;
 		}
 		
+		//If file could be read then add to list of models
 		if (mod != nullptr) {
 			models.push_back(*mod);
 		}
 	}
 
+	//Intitlise shaders and window
 	init();
-
 	glfwSetKeyCallback(window, key_callback);
 
+	//Main loop
 	while (!glfwWindowShouldClose(window))
 	{
 		//uncomment to draw only wireframe 
@@ -134,65 +141,57 @@ main(int argc, char** argv)
 	glfwTerminate();
 }
 
+//Togle currently selected model
 void toggleCurrentModel() {
 	if (models.size() != 0) {
 		currentModelIndex = (currentModelIndex + 1) % models.size();
 	}
 }
 
+// Handle user input
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (models.size() != 0) {
 		//WASD - Translate
 		if (key == GLFW_KEY_W && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "W pressed" << endl;
 			models[currentModelIndex].Translate(glm::vec3(0.00f, 0.10f, 0.0f));
 		}
 
 		else if (key == GLFW_KEY_A && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "A pressed" << endl;
 			models[currentModelIndex].Translate(glm::vec3(0.10f, 0.0f, 0.0f));
 		}
 
 		else if (key == GLFW_KEY_S && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "S pressed" << endl;
 			models[currentModelIndex].Translate(glm::vec3(0.0f, -0.10f, 0.0f));
 		}
 
 		else if (key == GLFW_KEY_D && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "D pressed" << endl;
 			models[currentModelIndex].Translate(glm::vec3(-0.10f, 0.0f, 0.0f));
 		}
 
 		//+/- - Scale
 		else if (key == GLFW_KEY_KP_ADD && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "+ pressed" << endl;
 			models[currentModelIndex].Scale(glm::vec3(0.3f, 0.3f, 0.3f));
 		}
 
 		else if (key == GLFW_KEY_KP_SUBTRACT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "- pressed" << endl;
 			models[currentModelIndex].Scale(glm::vec3(-0.3f, -0.3f, -0.3f));
 		}
 
 		//Arrow keys - Rotate
 		else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "Right arrow pressed" << endl;
 			models[currentModelIndex].Rotate(glm::vec3(0.0f, 10.0f, 0.0f));
 		}
 
 		else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "Left arrow pressed" << endl;
 			models[currentModelIndex].Rotate(glm::vec3(0.0f, -10.0f, 0.0f));
 		}
 
 		else if (key == GLFW_KEY_UP && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "Up arrow pressed" << endl;
 			models[currentModelIndex].Rotate(glm::vec3(-10.0f, 0.0f, 0.0f));
 		}
 
 		else if (key == GLFW_KEY_DOWN && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "Down arrow pressed" << endl;
 			models[currentModelIndex].Rotate(glm::vec3(10.0f, 0.0f, 0.0f));
 		}
 
@@ -202,11 +201,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 
 		else if (key == GLFW_KEY_BACKSPACE && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
-			cout << "Backspace pressed" << endl;
 			int deleteIndex = models.size() - 1;
 			models[deleteIndex].Delete();
 			models.pop_back();
 			toggleCurrentModel();
 		}
+	}
+	//close program
+	else if (key == GLFW_KEY_ESCAPE && (action == GLFW_PRESS || action == GLFW_REPEAT)) {
+		exit(0);
 	}
 }

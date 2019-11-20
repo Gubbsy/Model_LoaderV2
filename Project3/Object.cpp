@@ -17,6 +17,5 @@ void Object::Delete()
 {
 	for (int i = 0; i < meshes.size(); i++) {
 		meshes[i].Delete();
-		//delete &meshes[i];
 	}
 }

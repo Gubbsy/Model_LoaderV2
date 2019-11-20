@@ -9,23 +9,24 @@
 
 Model::Model()
 {
+	//Init model default values
 	position = glm::vec3(0.0f, 0.0f, 0.0f);
 	scale = glm::vec3(1, 1, 1);
 	orientation = glm::vec3(0.0f, 0, 0);
 
 	modelMat = glm::mat4(1.0f);
-	//GenerateModelMatrix();
 }
 
 void Model::Translate(vec3 _translateBy)
 {
-	std::cout << "translat called" << endl;
+	//Apply translation
 	position = _translateBy;
 	modelMat = glm::translate(modelMat, position);
 }
 
 void Model::Rotate(vec3 _rotateBY)
 {
+	//Apply rotations
 	orientation = _rotateBY;
 	modelMat = glm::rotate(modelMat, radians(orientation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	modelMat = glm::rotate(modelMat, radians(orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -34,11 +35,13 @@ void Model::Rotate(vec3 _rotateBY)
 
 void Model::Scale(vec3 _scaleBy)
 {
+	//Apply Scale
 	vec3 newScale = scale +_scaleBy ;
 	modelMat = glm::scale(modelMat, vec3(1.0f));
 	modelMat = glm::scale(modelMat, newScale);
 }
 
+//Add object to model
 void Model::AddObject(Object object)
 {
 	objects.push_back(object);
@@ -70,6 +73,5 @@ void Model::Delete()
 {
 	for (int i = 0; i < objects.size(); i++) {
 		objects[i].Delete();
-		//delete[] &objects[i];
 	}
 }

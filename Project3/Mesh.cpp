@@ -11,9 +11,11 @@ using namespace std;
 
 void Mesh::Init(std::vector<Vertex>& _vertexes, std::vector<GLuint>& _indices, Material& _material, string& _folderTree)
 {
+	//Gen VAO and Bind
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
+	//Construct mesh data
 	vertexes = _vertexes;
 	indices = _indices;
 	material = _material;
@@ -102,6 +104,7 @@ void Mesh::ApplyTexture() {
 }
 
 void Mesh::Draw(GLuint& shaderProgram) {
+	//Bind current VAO, apply any textures, draw
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -109,11 +112,13 @@ void Mesh::Draw(GLuint& shaderProgram) {
 
 void Mesh::Delete()
 {
+	//Unbind buffers to delete
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &indicesEBO);
 	glDeleteVertexArrays(1, &VAO);
 }
 
+//Check if file exists
 bool Mesh::exists(const std::string& name)
 {
 	ifstream f(name.c_str());

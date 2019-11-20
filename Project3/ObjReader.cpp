@@ -2,26 +2,31 @@
 
 Model* ObjReader::ReadFile(string _file) {
 	
+	//Intialise objects to form model
 	Model* model = new Model();
 	Object* tempObject = nullptr;
 	Mesh* tempMesh = nullptr;
 	
 	try {
+		//Intilas varables for file reading
 		Material currentMaterial;
 		file = _file;
 		string line = "";
 		ifstream myFile(file);
 		int indicesOffSet = 0;
 
+		// Reset reader to remove hangover from previouse reading
 		ResetReader();
 
+		//Construct folder tree from path to grab textue
 		ConstructFolderTree();
 
+		//Open file
 		if (myFile.is_open()) {
 
-			cout << "Opened File" << endl;
+			cout << file <<" Opened File" << endl;
 			while (getline(myFile, line)) {
-
+				
 				vector<string> token;
 				SplitOnSpace(token, line);
 
@@ -54,6 +59,8 @@ Model* ObjReader::ReadFile(string _file) {
 					normals.push_back(vec3(stof(token[1]), stof(token[2]), stof(token[3])));
 				}
 
+				// Once new material identifier encountered, add all current vertex data to mesh and add mesh to object
+				// clear temp stores
 				if (token[0] == "usemtl") {
 					string materialKey = token[1];
 					currentMaterial = materialsMap[materialKey];
@@ -64,6 +71,7 @@ Model* ObjReader::ReadFile(string _file) {
 						indices.clear();
 						indicesOffSet = 0;
 					}
+					//Instantiate new temp Mesh to be new mesh
 					tempMesh = new Mesh();
 				}
 
@@ -78,7 +86,7 @@ Model* ObjReader::ReadFile(string _file) {
 						istringstream faceIss(token[i]);
 
 						int index_counter = 0;
-
+						// Set temp store for vertex data
 						vec3 temp_pos = vec3(0.0f);
 						vec2 temp_tex = vec2(0.0f);
 						vec3 temp_norm = vec3(0.0f);
@@ -87,19 +95,20 @@ Model* ObjReader::ReadFile(string _file) {
 						//for every face
 						while (getline(faceIss, faceLine, '/')) {
 
-							//if 0 fetch vertices
+							//if index 0 fetch vertices
 							if (index_counter == 0) {
 								temp_pos = vertices[stoi(faceLine) - 1];
 							}
-							// if 1 fetch from texture
+							// if index 1 fetch from texture
 							else if (index_counter == 1) {
 								temp_tex = textures[stoi(faceLine) - 1];
 							}
-							// if 2 fetch from normal
+							// if index 2 fetch from normal
 							else if (index_counter == 2) {
 								temp_norm = normals[stoi(faceLine) - 1];
 							}
 
+							//Incremet index counter
 							index_counter++;
 						}
 
@@ -107,7 +116,7 @@ Model* ObjReader::ReadFile(string _file) {
 						vertexes.push_back(Vertex(temp_pos, temp_tex, temp_norm, temp_col));
 					}
 
-					//Generate indices based on number of vertices that make up a face
+					//Generate indices based on number of vertices that make up a face (in order to construct triangles from quad)
 					if (token.size() - 1 == 4) {
 						indices.push_back(0 + indicesOffSet);
 						indices.push_back(1 + indicesOffSet);
@@ -116,8 +125,8 @@ Model* ObjReader::ReadFile(string _file) {
 						indices.push_back(2 + indicesOffSet);
 						indices.push_back(3 + indicesOffSet);
 						indicesOffSet = indicesOffSet + 4;
-						//cout << "IndicesOffset: " << indicesOffSet << endl;
 					}
+					//Generate indices for triangle
 					else if (token.size() - 1 == 3) {
 						indices.push_back(0 + indicesOffSet);
 						indices.push_back(1 + indicesOffSet);
@@ -126,10 +135,13 @@ Model* ObjReader::ReadFile(string _file) {
 					}
 				}
 			}
+			//Add all remaining mesh data to object
 			tempMesh->Init(vertexes, indices, currentMaterial, relFolderTree);
 			tempObject->AddMesh(*tempMesh);
+			//construct model from objects
 			model->AddObject(*tempObject);
 
+			// clean up.
 			delete(tempMesh);
 			delete(tempObject);
 		}
@@ -148,6 +160,7 @@ Model* ObjReader::ReadFile(string _file) {
 
 void ObjReader::ResetReader()
 {
+	//clean up data from previouse reading
 	vertexes.clear();
 	indices.clear();
 	vertices.clear();
@@ -161,16 +174,19 @@ void ObjReader::ResetReader()
 
 void ObjReader::ConstructFolderTree()
 {
+	// Construct folder tree
 	relFolderTree = ".";
 	std::stringstream ss(file);
 	std::string folder;
 	std::vector<std::string> components;
 
+	//Split on /
 	while (std::getline(ss, folder, '/'))
 	{
 		components.push_back(folder);
 	}
 	
+	//Construct folder tree, removing file
 	for (int i = 0; i < components.size() -1; i++) {
 		relFolderTree = relFolderTree + "/" + components[i];
 	}
@@ -180,17 +196,19 @@ void ObjReader::ConstructFolderTree()
 
 void ObjReader::LoadMaterials() {
 	string curerntMtl = "";
-
 	string line = "";
 	ifstream myFile(relFolderTree + "/" + mtLib );
 	
+	//Open material File
 	if (myFile.is_open()) {
 		while (getline(myFile, line)) {
 			vector<string> token;
 			SplitOnSpace(token, line);
 
+			// Material file has content
 			if (token.size() > 0) {
 
+				// Cretae material upon reaching new material identifier and add it to material map
 				if (token[0] == "newmtl") {
 					curerntMtl = token[1];
 
@@ -198,7 +216,7 @@ void ObjReader::LoadMaterials() {
 					materialsMap[curerntMtl] = newMaterial;
 					materialsMap[curerntMtl].SetName(token[1]);
 				}
-
+				// Pull relevant data using identifiers
 				if (token[0] == "Ns") {
 					materialsMap[curerntMtl].SetSpecularWeight(stof(token[1]));
 				}
@@ -235,6 +253,7 @@ void ObjReader::LoadMaterials() {
 	}
 }
 
+// Split on space
 void ObjReader::SplitOnSpace(vector<string>& token, string& stringToSplit)
 {
 	istringstream iss(stringToSplit);
