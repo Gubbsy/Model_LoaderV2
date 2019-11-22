@@ -7,29 +7,40 @@
 #include <string>
 #include <fstream>
 #include <map> 
+#include <iostream>
+#include <cstring>
+#include <sstream>
+#include "Object.h"
 #include "Material.h"
 #include "Vertex.h"
+#include "Model.h"
 
 using namespace std;
 using namespace glm;
 
-class FileReader
+class ObjReader
 {
 private:
 
-	string file;
 	string mtLib;
 	string relFolderTree;
+
+	string file;
+
 	vector<vec3> vertices;
 	vector<vec2> textures;
 	vector<vec3> normals;
 
+	vector<Vertex> vertexes;
+	vector<GLuint> indices;
+
 	map<string, Material> materialsMap;
-	
 
 public:
-	bool ReadFile(string _file, vector<Vertex>& vertices, vector<GLuint>& indices);
+	Model* ReadFile(string _file);
+	void ResetReader();
 	void ConstructFolderTree();
 	void LoadMaterials();
+	void SplitOnSpace(vector<string>& token, string& stringToSplit);
 };
 
